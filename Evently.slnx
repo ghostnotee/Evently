@@ -4,4 +4,9 @@
         <File Path="Directory.Packages.props" />
         <File Path=".editorconfig" />
     </Folder>
+    <Folder Name="/src/" />
+    <Folder Name="/src/API/">
+        <Project Path="src/API/Evently.Api/Evently.Api.csproj" />
+    </Folder>
+    <Folder Name="/src/Modules/" />
 </Solution>
