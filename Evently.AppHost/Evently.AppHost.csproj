@@ -1,0 +1,12 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.3.5">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <UserSecretsId>abae8c35-d2bc-47b2-b6c6-f076cab52c94</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\src\API\Evently.Api\Evently.Api.csproj" />
+    </ItemGroup>
+
+</Project>
