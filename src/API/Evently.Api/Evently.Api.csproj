@@ -14,4 +14,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Evently.ServiceDefaults\Evently.ServiceDefaults.csproj" />
+    </ItemGroup>
+
 </Project>
