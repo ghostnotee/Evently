@@ -4,7 +4,6 @@ IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(ar
 
 IResourceBuilder<ParameterResource> username = builder.AddParameter("postgres-user", "postgres", secret: true);
 IResourceBuilder<ParameterResource> password = builder.AddParameter("postgres-pass", "postgres", secret: true);
-
 IResourceBuilder<PostgresServerResource> postgres = builder.AddPostgres("Database", username, password)
     .WithImage("postgres", "18")
     .WithEndpoint(name: "postgres-endpoint", scheme: "tcp", port: 5432, targetPort: 5432, isProxied: false)

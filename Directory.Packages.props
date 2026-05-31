@@ -4,17 +4,14 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Static code analysis -->
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.26.0.140279" />
-    
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.3.5" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
     <!-- Modules -->
     <!-- Events -->
-    
-    <!-- Web.Api -->
-    
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.3.5" />
+    <!-- Evently.Api -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
-    
     <!-- ArchitectureTests -->
-    
     <!-- Aspire -->
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.5.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.5.0" />
