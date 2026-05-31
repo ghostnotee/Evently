@@ -79,7 +79,9 @@ public static class Extensions
         return builder;
     }
 
+#pragma warning disable S3241
     private static TBuilder AddOpenTelemetryExporters<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+#pragma warning restore S3241
     {
         bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
 
