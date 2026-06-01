@@ -15,6 +15,9 @@
     <Folder Name="/src/Modules/" />
     <Folder Name="/src/Modules/Events/">
         <Project Path="src/Modules/Events/Evently.Modules.Events.Api/Evently.Modules.Events.Api.csproj" />
+        <Project Path="src/Modules/Events/Evently.Modules.Events.Application/Evently.Modules.Events.Application.csproj" />
         <Project Path="src/Modules/Events/Evently.Modules.Events.Domain/Evently.Modules.Events.Domain.csproj" />
+        <Project Path="src/Modules/Events/Evently.Modules.Events.Infrastructure/Evently.Modules.Events.Infrastructure.csproj" />
+        <Project Path="src/Modules/Events/Evently.Modules.Events.Presentation/Evently.Modules.Events.Presentation.csproj" />
     </Folder>
 </Solution>
