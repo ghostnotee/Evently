@@ -7,6 +7,10 @@
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
     <!-- Modules -->
     <!-- Events -->
+    <!-- Events Application -->
+    <PackageVersion Include="MediatR" Version="14.1.0" />
+    <PackageVersion Include="Dapper" Version="2.1.79" />
+    <!-- Events Infrastructure -->
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.3.5" />
     <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />
     <!-- Evently.Api -->

@@ -2,4 +2,8 @@
     <ItemGroup>
       <ProjectReference Include="..\Evently.Modules.Events.Domain\Evently.Modules.Events.Domain.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Dapper" />
+      <PackageReference Include="MediatR" />
+    </ItemGroup>
 </Project>
