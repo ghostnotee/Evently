@@ -10,25 +10,25 @@ public static class CreateEvent
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("events", async (Request request, EventsDbContext context) =>
-        {
-            var @event = new Event
             {
-                Id = Guid.NewGuid(),
-                Title = request.Title,
-                Description = request.Description,
-                Location = request.Location,
-                StartsAtUtc = request.StartsAtUtc,
-                EndsAtUtc = request.EndsAtUtc,
-                Status = EventStatus.Draft
-            };
+                var @event = new Event
+                {
+                    Id = Guid.NewGuid(),
+                    Title = request.Title,
+                    Description = request.Description,
+                    Location = request.Location,
+                    StartsAtUtc = request.StartsAtUtc,
+                    EndsAtUtc = request.EndsAtUtc,
+                    Status = EventStatus.Draft
+                };
 
-            context.Events.Add(@event);
+                context.Events.Add(@event);
 
-            await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
 
-            return Results.Ok(@event.Id);
-        })
-        .WithTags(Tags.Events);
+                return Results.Ok(@event.Id);
+            })
+            .WithTags(Tags.Events);
     }
 
     internal sealed class Request
