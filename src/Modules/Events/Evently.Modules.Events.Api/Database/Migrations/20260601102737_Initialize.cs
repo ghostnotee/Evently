@@ -16,21 +16,21 @@ namespace Evently.Modules.Events.Api.Database.Migrations
                 name: "events");
 
             migrationBuilder.CreateTable(
-                name: "Events",
+                name: "events",
                 schema: "events",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    Location = table.Column<string>(type: "text", nullable: false),
-                    StartsAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndsAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    location = table.Column<string>(type: "text", nullable: false),
+                    starts_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ends_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Events", x => x.Id);
+                    table.PrimaryKey("pk_events", x => x.id);
                 });
         }
 
@@ -38,7 +38,7 @@ namespace Evently.Modules.Events.Api.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Events",
+                name: "events",
                 schema: "events");
         }
     }
