@@ -1,5 +1,5 @@
+using Evently.Api.Extensions;
 using Evently.Modules.Events.Api;
-using Evently.Modules.Events.Api.Database;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +7,7 @@ builder.AddServiceDefaults();
 
 builder.Services.AddOpenApi();
 
-builder.AddNpgsqlDbContext<EventsDbContext>("evently");
+builder.AddEventsModule();
 
 WebApplication app = builder.Build();
 
@@ -16,6 +16,7 @@ app.MapDefaultEndpoints();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.ApplyMigrations();
 }
 
 EventsModule.MapEndpoints(app);
