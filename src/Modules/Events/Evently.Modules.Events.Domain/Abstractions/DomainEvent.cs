@@ -4,7 +4,7 @@ public abstract class DomainEvent : IDomainEvent
 {
     protected DomainEvent()
     {
-        Id = Guid.CreateVersion7();
+        Id = Guid.NewGuid();
         OccurredOnUtc = DateTime.UtcNow;
     }
 

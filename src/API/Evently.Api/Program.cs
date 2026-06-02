@@ -7,8 +7,6 @@ builder.AddServiceDefaults();
 
 builder.Services.AddOpenApi();
 
-builder.AddEventsModule();
-
 WebApplication app = builder.Build();
 
 app.MapDefaultEndpoints();
