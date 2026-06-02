@@ -6,6 +6,7 @@ using Evently.Modules.Events.Infrastructure.Data;
 using Evently.Modules.Events.Infrastructure.Database;
 using Evently.Modules.Events.Infrastructure.Events;
 using Evently.Modules.Events.Presentation.Events;
+using FluentValidation;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -29,6 +30,9 @@ public static class EventsModule
             {
                 config.RegisterServicesFromAssembly(AssemblyReference.Assembly);
             });
+
+            builder.Services.AddValidatorsFromAssembly(AssemblyReference.Assembly, includeInternalTypes: true);
+
             builder.AddInfrastructure();
         }
 

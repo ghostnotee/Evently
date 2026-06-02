@@ -31,7 +31,7 @@ public sealed class Event : Entity
     {
         var @event = new Event
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.CreateVersion7(),
             Title = title,
             Description = description,
             Location = location,
