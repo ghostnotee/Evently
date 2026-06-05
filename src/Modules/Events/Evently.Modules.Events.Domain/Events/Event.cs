@@ -40,7 +40,7 @@ public sealed class Event : Entity
 
         var @event = new Event
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.CreateVersion7(),
             CategoryId = category.Id,
             Title = title,
             Description = description,

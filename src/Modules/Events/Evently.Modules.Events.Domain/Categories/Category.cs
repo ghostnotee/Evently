@@ -18,7 +18,7 @@ public sealed class Category : Entity
     {
         var category = new Category
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.CreateVersion7(),
             Name = name,
             IsArchived = false
         };
