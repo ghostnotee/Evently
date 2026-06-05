@@ -12,6 +12,10 @@
     <Folder Name="/src/API/">
         <Project Path="src/API/Evently.Api/Evently.Api.csproj" />
     </Folder>
+    <Folder Name="/src/Common/">
+        <Project Path="src/Common/Evently.Common.Application/Evently.Common.Application.csproj" />
+        <Project Path="src/Common/Evently.Common.Domain/Evently.Common.Domain.csproj" />
+    </Folder>
     <Folder Name="/src/Modules/" />
     <Folder Name="/src/Modules/Events/">
         <Project Path="src/Modules/Events/Evently.Modules.Events.Application/Evently.Modules.Events.Application.csproj" />

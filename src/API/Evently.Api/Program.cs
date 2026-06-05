@@ -1,4 +1,5 @@
 using Evently.Api.Extensions;
+using Evently.Common.Application;
 using Evently.Modules.Events.Infrastructure;
 using Scalar.AspNetCore;
 
@@ -22,6 +23,10 @@ builder.Services.AddOpenApi(options =>
             : $"{typeNamespace}.{defaultSchemaId}";
     };
 });
+
+
+builder.Services.AddApplication([Evently.Modules.Events.Application.AssemblyReference.Assembly]);
+
 builder.Services.AddEventsModule(builder.Configuration);
 
 WebApplication app = builder.Build();
