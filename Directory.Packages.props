@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Static code analysis -->
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
     <!-- Modules -->
     <!-- Events -->

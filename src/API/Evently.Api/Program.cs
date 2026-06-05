@@ -1,6 +1,9 @@
 using Evently.Api.Extensions;
 using Evently.Common.Application;
+using Evently.Common.Infrastructure;
+using Evently.Modules.Events.Application;
 using Evently.Modules.Events.Infrastructure;
+using Microsoft.AspNetCore.OpenApi;
 using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -11,7 +14,7 @@ builder.Services.AddOpenApi(options =>
 {
     options.CreateSchemaReferenceId = typeInfo =>
     {
-        string? defaultSchemaId = Microsoft.AspNetCore.OpenApi.OpenApiOptions.CreateDefaultSchemaReferenceId(typeInfo);
+        string? defaultSchemaId = OpenApiOptions.CreateDefaultSchemaReferenceId(typeInfo);
         if (defaultSchemaId is null)
         {
             return null;
@@ -25,7 +28,8 @@ builder.Services.AddOpenApi(options =>
 });
 
 
-builder.Services.AddApplication([Evently.Modules.Events.Application.AssemblyReference.Assembly]);
+builder.Services.AddApplication([AssemblyReference.Assembly]);
+builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("evently")!);
 
 builder.Services.AddEventsModule(builder.Configuration);
 
