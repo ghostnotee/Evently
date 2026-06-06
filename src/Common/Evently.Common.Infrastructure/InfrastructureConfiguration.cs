@@ -4,23 +4,19 @@ using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Npgsql;
+using Microsoft.Extensions.Hosting;
 
 namespace Evently.Common.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        string databaseConnectionString)
+    public static void AddInfrastructure(
+        this IHostApplicationBuilder builder)
     {
-        NpgsqlDataSource npgsqlDataSource = new NpgsqlDataSourceBuilder(databaseConnectionString).Build();
-        services.TryAddSingleton(npgsqlDataSource);
+        // Aspire üzerinden — tracing aktif olur
+        builder.AddNpgsqlDataSource("evently");
 
-        services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-
-        services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
-
-        return services;
+        builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
+        builder.Services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Evently.Modules.Events.Infrastructure;
 
@@ -26,32 +27,33 @@ public static class EventsModule
         EventEndpoints.MapEndpoints(app);
     }
 
-    public static IServiceCollection AddEventsModule(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    extension(IHostApplicationBuilder builder)
     {
-        services.AddInfrastructure(configuration);
+        public IServiceCollection AddEventsModule()
+        {
+            AddInfrastructure(builder);
 
-        return services;
-    }
+            return builder.Services;
+        }
 
-    private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-    {
-        string databaseConnectionString = configuration.GetConnectionString("Database")!;
+        private void AddInfrastructure()
+        {
+            builder.AddNpgsqlDbContext<EventsDbContext>("evently", null,
+                optionsBuilder =>
+                {
+                    optionsBuilder.UseNpgsql(npgsqlOptions =>
+                            npgsqlOptions.MigrationsHistoryTable(
+                                HistoryRepository.DefaultTableName,
+                                Schemas.Events))
+                        .UseSnakeCaseNamingConvention()
+                        .AddInterceptors();
+                });
 
-        services.AddDbContext<EventsDbContext>(options =>
-            options
-                .UseNpgsql(
-                    databaseConnectionString,
-                    npgsqlOptions => npgsqlOptions
-                        .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events))
-                .UseSnakeCaseNamingConvention()
-                .AddInterceptors());
+            builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
 
-        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
-
-        services.AddScoped<IEventRepository, EventRepository>();
-        services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IEventRepository, EventRepository>();
+            builder.Services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+        }
     }
 }

@@ -1,33 +1,34 @@
 <Project>
-  <PropertyGroup>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-  </PropertyGroup>
-  <ItemGroup>
-    <!-- Static code analysis -->
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
-    <!-- Modules -->
-    <!-- Events -->
-    <!-- Events Application -->
-    <PackageVersion Include="MediatR" Version="14.1.0" />
-    <PackageVersion Include="Dapper" Version="2.1.79" />
-    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-    <!-- Events Infrastructure -->
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.4.2" />
-    <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />
-    <!-- Evently.Api -->
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.14.14" />
-    <!-- ArchitectureTests -->
-    <!-- Aspire -->
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.6.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.2" />
-  </ItemGroup>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+    <ItemGroup>
+        <!-- Static code analysis -->
+        <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913"/>
+        <!-- Modules -->
+        <!-- Events -->
+        <!-- Events Application -->
+        <PackageVersion Include="MediatR" Version="14.1.0"/>
+        <PackageVersion Include="Dapper" Version="2.1.79"/>
+        <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1"/>
+        <!-- Events Infrastructure -->
+        <PackageVersion Include="Aspire.Npgsql" Version="13.4.2"/>
+        <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.4.2"/>
+        <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1"/>
+        <!-- Evently.Api -->
+        <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8"/>
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8"/>
+        <PackageVersion Include="Scalar.AspNetCore" Version="2.14.14"/>
+        <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0"/>
+        <!-- ArchitectureTests -->
+        <!-- Aspire -->
+        <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0"/>
+        <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.6.0"/>
+        <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3"/>
+        <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3"/>
+        <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2"/>
+        <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1"/>
+        <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1"/>
+        <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.2"/>
+    </ItemGroup>
 </Project>

@@ -29,10 +29,10 @@ builder.Services.AddOpenApi(options =>
 
 
 builder.Services.AddApplication([AssemblyReference.Assembly]);
-builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("evently")!);
+builder.AddInfrastructure();
 builder.Configuration.AddModuleConfiguration(["events"]);
 
-builder.Services.AddEventsModule(builder.Configuration);
+builder.AddEventsModule();
 
 WebApplication app = builder.Build();
 
