@@ -5,8 +5,14 @@ using Evently.Modules.Events.Application;
 using Evently.Modules.Events.Infrastructure;
 using Microsoft.AspNetCore.OpenApi;
 using Scalar.AspNetCore;
+using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig
+        .ReadFrom.Configuration(context.Configuration)
+        .WriteTo.OpenTelemetry()); // Aspire Dashboard
 
 builder.AddServiceDefaults();
 
@@ -46,5 +52,7 @@ if (app.Environment.IsDevelopment())
 }
 
 EventsModule.MapEndpoints(app);
+
+app.UseSerilogRequestLogging();
 
 await app.RunAsync();
