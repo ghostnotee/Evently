@@ -11,8 +11,7 @@ using Serilog;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfig) =>
-    loggerConfig
-        .ReadFrom.Configuration(context.Configuration)
+    loggerConfig.ReadFrom.Configuration(context.Configuration)
         .WriteTo.OpenTelemetry()); // Aspire Dashboard
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();

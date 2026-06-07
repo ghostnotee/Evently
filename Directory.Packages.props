@@ -7,8 +7,10 @@
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
     <!-- Common Application -->
     <PackageVersion Include="Serilog" Version="4.3.1" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.4.2" />
     <!-- Common Infrastructure -->
-    <PackageVersion Include="Dapper" Version="2.1.79" />  
+    <PackageVersion Include="Dapper" Version="2.1.79" />
+    <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.4.2" />
     <!-- Modules -->
     <!-- Events -->
     <!-- Events Application -->

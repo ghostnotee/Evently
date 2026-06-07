@@ -38,7 +38,7 @@ public static class EventsModule
 
         private void AddInfrastructure()
         {
-            builder.AddNpgsqlDbContext<EventsDbContext>("evently", null,
+            builder.AddNpgsqlDbContext<EventsDbContext>("evently-db", null,
                 optionsBuilder =>
                 {
                     optionsBuilder.UseNpgsql(npgsqlOptions =>
