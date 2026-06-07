@@ -9,8 +9,7 @@ namespace Evently.Modules.Events.Application.Events.PublishEvent;
 internal sealed class PublishEventCommandHandler(
     IEventRepository eventRepository,
     ITicketTypeRepository ticketTypeRepository,
-    IUnitOfWork unitOfWork)
-    : ICommandHandler<PublishEventCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<PublishEventCommand>
 {
     public async Task<Result> Handle(PublishEventCommand request, CancellationToken cancellationToken)
     {
