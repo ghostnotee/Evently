@@ -4,6 +4,8 @@ using Evently.Common.Application;
 using Evently.Common.Infrastructure;
 using Evently.Modules.Events.Application;
 using Evently.Modules.Events.Infrastructure;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
@@ -41,6 +43,10 @@ builder.Services.AddApplication([AssemblyReference.Assembly]);
 builder.AddInfrastructure();
 builder.Configuration.AddModuleConfiguration(["events"]);
 
+builder.Services.AddHealthChecks();
+    // .AddNpgSql(builder.Configuration.GetConnectionString("evently-db")!)
+    // .AddRedis(builder.Configuration.GetConnectionString("evently-redis")!);
+
 builder.AddEventsModule();
 
 WebApplication app = builder.Build();
@@ -55,6 +61,11 @@ if (app.Environment.IsDevelopment())
 }
 
 EventsModule.MapEndpoints(app);
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.UseSerilogRequestLogging();
 

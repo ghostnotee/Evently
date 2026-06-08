@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.Hosting;
 // To learn more about using this project, see https://aka.ms/aspire/service-defaults
 public static class Extensions
 {
-    private const string HealthEndpointPath = "/health";
+    private const string HealthEndpointPath = "/health/live";
     private const string AlivenessEndpointPath = "/alive";
 
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder

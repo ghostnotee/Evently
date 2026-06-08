@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Scalar.AspNetCore"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
