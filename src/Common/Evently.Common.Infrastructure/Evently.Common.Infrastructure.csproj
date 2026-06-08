@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <ProjectReference Include="..\Evently.Common.Application\Evently.Common.Application.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Npgsql" />
+        <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
+        <PackageReference Include="EFCore.NamingConventions"/>
+    </ItemGroup>
+
+</Project>
