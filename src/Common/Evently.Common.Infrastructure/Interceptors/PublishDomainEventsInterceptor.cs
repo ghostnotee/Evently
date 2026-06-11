@@ -15,7 +15,7 @@ public sealed class PublishDomainEventsInterceptor(IServiceScopeFactory serviceS
     {
         if (eventData.Context is not null)
         {
-            await PublishDomainEventsAsync(eventData.Context);
+            await PublishDomainEventsAsync(eventData.Context, cancellationToken);
         }
 
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
