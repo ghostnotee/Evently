@@ -21,29 +21,37 @@ public sealed class PublishDomainEventsInterceptor(IServiceScopeFactory serviceS
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
 
-    private async Task PublishDomainEventsAsync(DbContext context)
+    private async Task PublishDomainEventsAsync(DbContext context, CancellationToken cancellationToken)
     {
-        var domainEvents = context
+        List<(Entity Entity, IReadOnlyCollection<IDomainEvent> Events)> entitiesWithEvents = context
             .ChangeTracker
             .Entries<Entity>()
             .Select(entry => entry.Entity)
-            .SelectMany(entity =>
-            {
-                IReadOnlyCollection<IDomainEvent> domainEvents = entity.DomainEvents;
-
-                entity.ClearDomainEvents();
-
-                return domainEvents;
-            })
+            .Select(entity => (Entity: entity, Events: entity.DomainEvents))
+            .Where(x => x.Events.Count > 0)
             .ToList();
+
+        if (entitiesWithEvents.Count == 0)
+        {
+            return;
+        }
 
         using IServiceScope scope = serviceScopeFactory.CreateScope();
 
         IPublisher publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
 
-        foreach (IDomainEvent domainEvent in domainEvents)
+        foreach (var (_, events) in entitiesWithEvents)
         {
-            await publisher.Publish(domainEvent);
-        } 
+            foreach (IDomainEvent domainEvent in events)
+            {
+                await publisher.Publish(domainEvent, cancellationToken);
+            }
+        }
+
+        // Only clear after successful publish so a failed publish can be retried.
+        foreach (var (entity, _) in entitiesWithEvents)
+        {
+            entity.ClearDomainEvents();
+        }
     }
 }
