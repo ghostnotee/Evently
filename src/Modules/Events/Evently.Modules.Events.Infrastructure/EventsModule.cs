@@ -31,7 +31,8 @@ public static class EventsModule
 
         private void AddInfrastructure()
         {
-            string? connectionString = builder.Configuration.GetConnectionString("evently-db");
+            string connectionString = builder.Configuration.GetConnectionString("evently-db")
+                ?? throw new InvalidOperationException("Connection string 'evently-db' was not found.");
             builder.Services.AddDbContext<EventsDbContext>((provider, optionsBuilder) =>
             {
                 optionsBuilder.UseNpgsql(connectionString,
