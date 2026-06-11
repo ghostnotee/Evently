@@ -1,4 +1,5 @@
-﻿using Evently.Common.Presentation.Endpoints;
+﻿using Evently.Common.Infrastructure.Interceptors;
+using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Application.Abstractions.Data;
 using Evently.Modules.Events.Domain.Categories;
 using Evently.Modules.Events.Domain.Events;
@@ -10,6 +11,7 @@ using Evently.Modules.Events.Infrastructure.TicketTypes;
 using Evently.Modules.Events.Presentation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -29,16 +31,17 @@ public static class EventsModule
 
         private void AddInfrastructure()
         {
-            builder.AddNpgsqlDbContext<EventsDbContext>("evently-db", null,
-                optionsBuilder =>
-                {
-                    optionsBuilder.UseNpgsql(npgsqlOptions =>
-                            npgsqlOptions.MigrationsHistoryTable(
-                                HistoryRepository.DefaultTableName,
-                                Schemas.Events))
-                        .UseSnakeCaseNamingConvention()
-                        .AddInterceptors();
-                });
+            string? connectionString = builder.Configuration.GetConnectionString("evently-db");
+            builder.Services.AddDbContext<EventsDbContext>((provider, optionsBuilder) =>
+            {
+                optionsBuilder.UseNpgsql(connectionString,
+                        contextOptionsBuilder => contextOptionsBuilder
+                            .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events))
+                    .UseSnakeCaseNamingConvention()
+                    .AddInterceptors(provider.GetRequiredService<PublishDomainEventsInterceptor>());
+            });
+
+            builder.EnrichNpgsqlDbContext<EventsDbContext>();
 
             builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
 
