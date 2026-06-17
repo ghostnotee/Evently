@@ -21,18 +21,17 @@ public static class EventsModule
 {
     extension(IHostApplicationBuilder builder)
     {
-        public IServiceCollection AddEventsModule()
+        public void AddEventsModule()
         {
-            builder.Services.AddEndpoints(AssemblyReference.Assembly);
             builder.AddInfrastructure();
-
-            return builder.Services;
+            builder.Services.AddEndpoints(AssemblyReference.Assembly);
         }
 
         private void AddInfrastructure()
         {
             string connectionString = builder.Configuration.GetConnectionString("evently-db")
-                ?? throw new InvalidOperationException("Connection string 'evently-db' was not found.");
+                                      ?? throw new InvalidOperationException(
+                                          "Connection string 'evently-db' was not found.");
             builder.Services.AddDbContext<EventsDbContext>((provider, optionsBuilder) =>
             {
                 optionsBuilder.UseNpgsql(connectionString,
@@ -43,10 +42,9 @@ public static class EventsModule
             });
 
             builder.EnrichNpgsqlDbContext<EventsDbContext>();
-
+            builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
 
-            builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
         }

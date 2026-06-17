@@ -3,8 +3,8 @@ using Evently.Api.Middleware;
 using Evently.Common.Application;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.Endpoints;
-using Evently.Modules.Events.Application;
 using Evently.Modules.Events.Infrastructure;
+using Evently.Modules.Users.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.OpenApi;
@@ -40,15 +40,20 @@ builder.Services.AddOpenApi(options =>
 });
 
 
-builder.Services.AddApplication([AssemblyReference.Assembly]);
+builder.Services.AddApplication([
+    Evently.Modules.Events.Application.AssemblyReference.Assembly, 
+    Evently.Modules.Users.Application.AssemblyReference.Assembly
+]);
+
 builder.AddInfrastructure();
-builder.Configuration.AddModuleConfiguration(["events"]);
+builder.Configuration.AddModuleConfiguration(["events", "users"]);
 
 builder.Services.AddHealthChecks();
-    // .AddNpgSql(builder.Configuration.GetConnectionString("evently-db")!)
-    // .AddRedis(builder.Configuration.GetConnectionString("evently-redis")!);
+// .AddNpgSql(builder.Configuration.GetConnectionString("evently-db")!)
+// .AddRedis(builder.Configuration.GetConnectionString("evently-redis")!);
 
 builder.AddEventsModule();
+builder.AddUsersModule();
 
 WebApplication app = builder.Build();
 
