@@ -9,18 +9,18 @@
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
     <!-- Common Application -->
     <PackageVersion Include="Serilog" Version="4.3.1" />
-    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.4.3" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.4.5" />
     <!-- Common Infrastructure -->
     <PackageVersion Include="Dapper" Version="2.1.79" />
-    <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.4.3" />
+    <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.4.5" />
     <!-- Modules -->
     <!-- Events -->
     <!-- Events Application -->
     <PackageVersion Include="MediatR" Version="14.1.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <!-- Events Infrastructure -->
-    <PackageVersion Include="Aspire.Npgsql" Version="13.4.3" />
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.4.3" />
+    <PackageVersion Include="Aspire.Npgsql" Version="13.4.5" />
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.4.5" />
     <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />
     <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
@@ -40,7 +40,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.3" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.5" />
     <PackageVersion Include="MessagePack" Version="3.1.7" />  
   </ItemGroup>
 </Project>
