@@ -63,5 +63,8 @@ public sealed class CartService(ICacheService cacheService)
         await cacheService.SetAsync(cacheKey, cart, DefaultExpiration, cancellationToken);
     }
 
-    private static string CreateCacheKey(Guid customerId) => $"carts:{customerId}";
+    private static string CreateCacheKey(Guid customerId)
+    {
+        return $"carts:{customerId}";
+    }
 }
