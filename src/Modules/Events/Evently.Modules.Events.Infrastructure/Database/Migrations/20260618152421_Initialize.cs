@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Evently.Modules.Events.Infrastructure.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class Create_Database : Migration
+    public partial class Initialize : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

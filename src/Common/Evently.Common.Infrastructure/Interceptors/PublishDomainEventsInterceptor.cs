@@ -23,7 +23,7 @@ public sealed class PublishDomainEventsInterceptor(IServiceScopeFactory serviceS
 
     private async Task PublishDomainEventsAsync(DbContext context, CancellationToken cancellationToken)
     {
-        List<(Entity Entity, IReadOnlyCollection<IDomainEvent> Events)> entitiesWithEvents = context
+        var entitiesWithEvents = context
             .ChangeTracker
             .Entries<Entity>()
             .Select(entry => entry.Entity)
@@ -40,7 +40,7 @@ public sealed class PublishDomainEventsInterceptor(IServiceScopeFactory serviceS
 
         IPublisher publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
 
-        foreach (var (_, events) in entitiesWithEvents)
+        foreach ((Entity _, IReadOnlyCollection<IDomainEvent> events) in entitiesWithEvents)
         {
             foreach (IDomainEvent domainEvent in events)
             {
@@ -48,8 +48,8 @@ public sealed class PublishDomainEventsInterceptor(IServiceScopeFactory serviceS
             }
         }
 
-        // Only clear after successful publish so a failed publish can be retried.
-        foreach (var (entity, _) in entitiesWithEvents)
+        // Only clear after successful publish so a failed publishing can be retried.
+        foreach ((Entity entity, IReadOnlyCollection<IDomainEvent> _) in entitiesWithEvents)
         {
             entity.ClearDomainEvents();
         }
