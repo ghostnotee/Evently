@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Static code analysis -->
+    <PackageVersion Include="MassTransit.Abstractions" Version="9.1.2" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
     <!-- Common Application -->
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
@@ -13,6 +14,7 @@
     <!-- Common Infrastructure -->
     <PackageVersion Include="Dapper" Version="2.1.79" />
     <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.4.6" />
+    <PackageVersion Include="MassTransit" Version="9.1.2" />
     <!-- Modules -->
     <!-- Events -->
     <!-- Events Application -->
@@ -42,5 +44,6 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
     <PackageVersion Include="MessagePack" Version="3.1.7" />
+    <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="13.4.6" />
   </ItemGroup>
 </Project>
