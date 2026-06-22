@@ -58,6 +58,7 @@ public sealed class Payment : Entity
 
         if (Amount == AmountRefunded)
         {
+            RefundedAtUtc = DateTime.UtcNow; // Set refunded date when fully refunded
             Raise(new PaymentRefundedDomainEvent(Id, TransactionId, refundAmount));
         }
         else
