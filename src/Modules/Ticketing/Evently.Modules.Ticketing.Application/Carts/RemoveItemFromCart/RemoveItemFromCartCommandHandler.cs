@@ -3,15 +3,15 @@ using Evently.Common.Domain;
 using Evently.Modules.Ticketing.Domain.Customers;
 using Evently.Modules.Ticketing.Domain.Events;
 
-namespace Evently.Modules.Ticketing.Application.Carts.AddItemToCart;
+namespace Evently.Modules.Ticketing.Application.Carts.RemoveItemFromCart;
 
-internal sealed class AddItemToCartCommandHandler(
+internal sealed class RemoveItemFromCartCommandHandler(
     ICustomerRepository customerRepository,
     ITicketTypeRepository ticketTypeRepository,
     CartService cartService)
-    : ICommandHandler<AddItemToCartCommand>
+    : ICommandHandler<RemoveItemFromCartCommand>
 {
-    public async Task<Result> Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(RemoveItemFromCartCommand request, CancellationToken cancellationToken)
     {
         Customer? customer = await customerRepository.GetAsync(request.CustomerId, cancellationToken);
 
@@ -27,20 +27,7 @@ internal sealed class AddItemToCartCommandHandler(
             return Result.Failure(TicketTypeErrors.NotFound(request.TicketTypeId));
         }
 
-        if (ticketType.AvailableQuantity < request.Quantity)
-        {
-            return Result.Failure(TicketTypeErrors.NotEnoughQuantity(ticketType.AvailableQuantity));
-        }
-
-        var cartItem = new CartItem
-        {
-            TicketTypeId = request.TicketTypeId,
-            Quantity = request.Quantity,
-            Price = ticketType.Price,
-            Currency = ticketType.Currency
-        };
-
-        await cartService.AddItemAsync(request.CustomerId, cartItem, cancellationToken);
+        await cartService.RemoveItemAsync(customer.Id, ticketType.Id, cancellationToken);
 
         return Result.Success();
     }
