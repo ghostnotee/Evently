@@ -3,11 +3,13 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <!-- Static code analysis -->
-    <PackageVersion Include="MassTransit.Abstractions" Version="9.1.2" />
+    <!-- Static code analysis -->    
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
+    <!-- Common Domain -->
+    <PackageVersion Include="Ulid" Version="1.4.1" />
     <!-- Common Application -->
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
+    <PackageVersion Include="MassTransit.Abstractions" Version="9.1.2" />
     <!-- Common Application -->
     <PackageVersion Include="Serilog" Version="4.3.1" />
     <PackageVersion Include="Aspire.Hosting.Redis" Version="13.4.6" />
@@ -45,5 +47,6 @@
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
     <PackageVersion Include="MessagePack" Version="3.1.7" />
     <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="13.4.6" />
+    
   </ItemGroup>
 </Project>
