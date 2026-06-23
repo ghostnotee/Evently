@@ -27,15 +27,17 @@ IResourceBuilder<RedisResource> redis = builder.AddRedis("evently-redis", passwo
 //     .WithManagementPlugin(15672)
 //     .WithEndpoint(name: "rabbitmq-management", scheme: "http", port: 15672, targetPort: 15672, isProxied: false);
 
+IResourceBuilder<ParameterResource> keycloakUsername = builder.AddParameter("keycloak-admin-user");
+IResourceBuilder<ParameterResource> keycloakPassword = builder.AddParameter("keycloak-admin-password", true);
 IResourceBuilder<ContainerResource> keycloak = builder
     .AddContainer("evently-identity", "quay.io/keycloak/keycloak", "latest")
     .WithLifetime(ContainerLifetime.Persistent)
     .WithArgs("start-dev", "--import-realm")
     .WithEnvironment("KC_HEALTH_ENABLED", "true")
-    .WithEnvironment("KEYCLOAK_ADMIN", "admin")
-    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "admin")
+    .WithEnvironment("KEYCLOAK_ADMIN", keycloakUsername)
+    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", keycloakPassword)
     .WithVolume("keycloak-data", "/opt/keycloak/data")
-    .WithBindMount("./.files", "/opt/keycloak/data/import")
+    .WithBindMount("../.files", "/opt/keycloak/data/import")
     .WithHttpEndpoint(name: "keycloak-endpoint", port: 18080, targetPort: 8080, isProxied: false)
     .WithContainerRuntimeArgs("--restart=on-failure");
 
