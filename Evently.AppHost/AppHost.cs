@@ -39,6 +39,8 @@ IResourceBuilder<ContainerResource> keycloak = builder
     .WithVolume("keycloak-data", "/opt/keycloak/data")
     .WithBindMount("../.files", "/opt/keycloak/data/import")
     .WithHttpEndpoint(name: "keycloak-endpoint", port: 18080, targetPort: 8080, isProxied: false)
+    .WithHttpEndpoint(name: "health", port: 9000, targetPort: 9000, isProxied: false) 
+    .WithHttpHealthCheck(endpointName: "health", path: "/health/")
     .WithContainerRuntimeArgs("--restart=on-failure");
 
 builder.AddProject<Evently_Api>("evently-api")
