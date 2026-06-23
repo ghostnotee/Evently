@@ -18,11 +18,37 @@ IResourceBuilder<RedisResource> redis = builder.AddRedis("evently-redis", passwo
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume(isReadOnly: false);
 
+// IResourceBuilder<ParameterResource> rabbitmqUsername = builder.AddParameter("username", "guest", secret: true);
+// IResourceBuilder<ParameterResource> rabbitmqPassword = builder.AddParameter("password", "guest", secret: true);
+// IResourceBuilder<RabbitMQServerResource> rabbitmq = builder.AddRabbitMQ("messaging", rabbitmqUsername, rabbitmqPassword)
+//     .WithLifetime(ContainerLifetime.Persistent)
+//     .WithDataVolume(isReadOnly: false)
+//     .WithEndpoint(name: "rabbitmq-endpoint", scheme: "tcp", port: 5672, targetPort: 5672, isProxied: false)
+//     .WithManagementPlugin(15672)
+//     .WithEndpoint(name: "rabbitmq-management", scheme: "http", port: 15672, targetPort: 15672, isProxied: false);
+
+IResourceBuilder<ParameterResource> keycloakUsername = builder.AddParameter("keycloak-admin-user");
+IResourceBuilder<ParameterResource> keycloakPassword = builder.AddParameter("keycloak-admin-password", true);
+IResourceBuilder<ContainerResource> keycloak = builder
+    .AddContainer("evently-identity", "quay.io/keycloak/keycloak", "latest")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithArgs("start-dev", "--import-realm")
+    .WithEnvironment("KC_HEALTH_ENABLED", "true")
+    .WithEnvironment("KEYCLOAK_ADMIN", keycloakUsername)
+    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", keycloakPassword)
+    .WithVolume("keycloak-data", "/opt/keycloak/data")
+    .WithBindMount("../.files", "/opt/keycloak/data/import")
+    .WithHttpEndpoint(name: "keycloak-endpoint", port: 18080, targetPort: 8080, isProxied: false)
+    .WithContainerRuntimeArgs("--restart=on-failure");
 
 builder.AddProject<Evently_Api>("evently-api")
     .WithReference(eventlyDb)
-    .WithReference(redis)
     .WaitFor(eventlyDb)
-    .WaitFor(redis);
+    .WithReference(redis)
+    .WaitFor(redis)
+    .WithReference(keycloak.GetEndpoint("http"))
+    .WaitFor(keycloak);
+// .WithReference(rabbitmq)
+// .WaitFor(rabbitmq);
 
 await builder.Build().RunAsync();
