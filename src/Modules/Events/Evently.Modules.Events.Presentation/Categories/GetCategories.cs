@@ -28,10 +28,11 @@ internal sealed class GetCategories : IEndpoint
                 if (result.IsSuccess)
                 {
                     await cacheService.SetAsync("categories", result.Value);
-                }
+                    }
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             })
+            .RequireAuthorization()
             .WithTags(Tags.Categories);
     }
 }
