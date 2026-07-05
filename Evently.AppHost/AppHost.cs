@@ -4,7 +4,8 @@ IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(ar
 
 IResourceBuilder<ParameterResource> username = builder.AddParameter("postgres-user", "postgres", secret: true);
 IResourceBuilder<ParameterResource> password = builder.AddParameter("postgres-pass", "postgres", secret: true);
-IResourceBuilder<PostgresServerResource> postgres = builder.AddPostgres("evently-postgres", username, password)
+IResourceBuilder<PostgresServerResource> postgres = builder
+    .AddPostgres("evently-postgres", username, password)
     .WithImage("postgres", "18")
     .WithEndpoint(name: "postgres-endpoint", scheme: "tcp", port: 5432, targetPort: 5432, isProxied: false)
     .WithLifetime(ContainerLifetime.Persistent)
@@ -12,10 +13,11 @@ IResourceBuilder<PostgresServerResource> postgres = builder.AddPostgres("evently
 IResourceBuilder<PostgresDatabaseResource> eventlyDb = postgres.AddDatabase("evently-db");
 
 IResourceBuilder<ParameterResource> redisPassword = builder.AddParameter("redis-pass", "redis", secret: true);
-IResourceBuilder<RedisResource> redis = builder.AddRedis("evently-redis", password: redisPassword)
+IResourceBuilder<RedisResource> redis = builder
+    .AddRedis("evently-redis", password: redisPassword)
+    .WithLifetime(ContainerLifetime.Persistent)
     .WithImage("redis", "8")
     .WithEndpoint(name: "redis-endpoint", scheme: "tcp", port: 6379, targetPort: 6379, isProxied: false)
-    .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume(isReadOnly: false);
 
 // IResourceBuilder<ParameterResource> rabbitmqUsername = builder.AddParameter("username", "guest", secret: true);
@@ -33,7 +35,8 @@ IResourceBuilder<ContainerResource> keycloak = builder
     .AddKeycloak("keycloak", adminUsername: keycloakUsername, adminPassword: keycloakPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataBindMount("../.files")
-    .WithRealmImport("../.files");
+    .WithRealmImport("../.files")
+    .WithOtlpExporter();
 
 builder.AddProject<Evently_Api>("evently-api")
     .WithReference(eventlyDb)
