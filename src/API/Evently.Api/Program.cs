@@ -80,5 +80,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 app.UseSerilogRequestLogging();
 
 app.UseExceptionHandler();
+app.UseAuthentication();
+app.UseAuthorization();
 
 await app.RunAsync();

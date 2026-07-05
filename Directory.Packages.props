@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Static code analysis -->
-    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="13.4.6-preview.1.26319.6" />
+    
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
     <!-- Common Domain -->
     <PackageVersion Include="Ulid" Version="1.4.1" />
@@ -18,10 +18,11 @@
     <PackageVersion Include="Dapper" Version="2.1.79" />
     <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.4.6" />
     <PackageVersion Include="MassTransit" Version="9.1.2" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
     <!-- Modules -->
     <!-- Events -->
     <!-- Events Application -->
-    <PackageVersion Include="MediatR" Version="14.1.0" />
+    <PackageVersion Include="MediatR" Version="14.2.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <!-- Events Infrastructure -->
     <PackageVersion Include="Aspire.Npgsql" Version="13.4.6" />
@@ -31,6 +32,7 @@
     <PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
     <!-- Evently.Api -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="2.9.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.16.4" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
@@ -42,11 +44,12 @@
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.7.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.16.0" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.16.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.16.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.16.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
     <PackageVersion Include="MessagePack" Version="3.1.7" />
     <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="13.4.6" />
+    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="13.4.6-preview.1.26319.6" />
   </ItemGroup>
 </Project>

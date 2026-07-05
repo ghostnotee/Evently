@@ -2,6 +2,7 @@
 using Evently.Common.Application.Clock;
 using Evently.Common.Application.Data;
 using Evently.Common.Application.EventBus;
+using Evently.Common.Infrastructure.Authentication;
 using Evently.Common.Infrastructure.Caching;
 using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
@@ -20,6 +21,8 @@ public static class InfrastructureConfiguration
     public static void AddInfrastructure(this IHostApplicationBuilder builder,
         Action<IRegistrationConfigurator>[] moduleConfigureConsumers)
     {
+        builder.Services.AddAuthenticationInternal();
+        
         builder.AddNpgsqlDataSource("evently-db");
 
         builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
