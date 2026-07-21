@@ -32,7 +32,7 @@ IResourceBuilder<RedisResource> redis = builder
 IResourceBuilder<ParameterResource> keycloakUsername = builder.AddParameter("keycloak-admin-user");
 IResourceBuilder<ParameterResource> keycloakPassword = builder.AddParameter("keycloak-admin-password", true);
 IResourceBuilder<ContainerResource> keycloak = builder
-    .AddKeycloak("keycloak", adminUsername: keycloakUsername, adminPassword: keycloakPassword)
+    .AddKeycloak("evently-keycloak", adminUsername: keycloakUsername, adminPassword: keycloakPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataBindMount("../.files")
     .WithRealmImport("../.files")
