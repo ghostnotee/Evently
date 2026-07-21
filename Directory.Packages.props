@@ -5,7 +5,7 @@
   <ItemGroup>
     <!-- Static code analysis -->
     
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.29.0.143774" />
     <!-- Common Domain -->
     <PackageVersion Include="Ulid" Version="1.4.1" />
     <!-- Common Application -->
