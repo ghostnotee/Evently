@@ -25,7 +25,8 @@ IResourceBuilder<ParameterResource> keycloakPassword = builder.AddParameter("key
 IResourceBuilder<ContainerResource> keycloak = builder
     .AddKeycloak("evently-keycloak", adminUsername: keycloakUsername, adminPassword: keycloakPassword)
     .WithLifetime(ContainerLifetime.Persistent)
-    .WithEndpoint(name: "http", scheme: "http", port: 8080, targetPort: 8080, isProxied: false)
+    .WithEndpoint(name: "keycloak-endpoint", scheme: "https", port: 18080, targetPort: 8443, isProxied: false)
+    .WithEndpoint(name: "keycloak-health-endpoint", scheme: "https", port: 9000, targetPort: 9000, isProxied: false)
     .WithDataBindMount("../.files")
     .WithRealmImport("../.files")
     .WithOtlpExporter();
