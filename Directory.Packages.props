@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Static code analysis -->
+    
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.31.0.145097" />
     <!-- Common Domain -->
     <PackageVersion Include="Ulid" Version="1.4.1" />
@@ -37,6 +38,7 @@
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="4.2.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.Uris" Version="9.0.0" />
     <!-- ArchitectureTests -->
     <!-- Aspire -->
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0" />
