@@ -51,9 +51,9 @@ builder.Services.AddApplication([
 builder.AddInfrastructure([TicketingModule.ConfigureConsumers]);
 builder.Configuration.AddModuleConfiguration(["events", "users", "ticketing"]);
 
-builder.Services.AddHealthChecks();
-// .AddNpgSql(builder.Configuration.GetConnectionString("evently-db")!)
-// .AddRedis(builder.Configuration.GetConnectionString("evently-redis")!);
+builder.Services.AddHealthChecks()
+    .AddRedis(builder.Configuration.GetConnectionString("evently-redis")!)
+    .AddUrlGroup(new Uri(builder.Configuration["Keycloak:HealthUrl"]!), HttpMethod.Get, "keycloak");
 
 builder.AddEventsModule();
 builder.AddUsersModule();
