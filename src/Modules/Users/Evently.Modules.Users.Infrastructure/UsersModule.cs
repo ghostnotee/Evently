@@ -1,8 +1,10 @@
-﻿using Evently.Common.Infrastructure.Interceptors;
+﻿using Evently.Common.Application.Authorization;
+using Evently.Common.Infrastructure.Interceptors;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Users.Application.Abstractions.Data;
 using Evently.Modules.Users.Application.Abstractions.Identity;
 using Evently.Modules.Users.Domain.Users;
+using Evently.Modules.Users.Infrastructure.Authorization;
 using Evently.Modules.Users.Infrastructure.Database;
 using Evently.Modules.Users.Infrastructure.Identity;
 using Evently.Modules.Users.Infrastructure.Users;
@@ -28,6 +30,7 @@ public static class UsersModule
 
         private void AddInfrastructure()
         {
+            builder.Services.AddScoped<IPermissionService, PermissionService>();
             builder.Services.Configure<KeyCloakOptions>(builder.Configuration.GetSection("Users:KeyCloak"));
             builder.Services.AddTransient<KeyCloakAuthDelegatingHandler>();
             builder.Services
@@ -37,9 +40,9 @@ public static class UsersModule
                     httpClient.BaseAddress = new Uri(keyCloakOptions.AdminUrl);
                 })
                 .AddHttpMessageHandler<KeyCloakAuthDelegatingHandler>();
-            
+
             builder.Services.AddTransient<IIdentityProviderService, IdentityProviderService>();
-            
+
             string connectionString = builder.Configuration.GetConnectionString("evently-db")
                                       ?? throw new InvalidOperationException(
                                           "Connection string 'evently-db' was not found.");
