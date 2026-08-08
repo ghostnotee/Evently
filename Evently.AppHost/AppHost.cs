@@ -28,7 +28,7 @@ IResourceBuilder<ContainerResource> keycloak = builder
     .WithEndpoint(name: "keycloak-endpoint", scheme: "https", port: 18080, targetPort: 8443, isProxied: false)
     .WithEndpoint(name: "keycloak-health-endpoint", scheme: "https", port: 9000, targetPort: 9000, isProxied: false)
     .WithDataBindMount("../.files")
-    .WithRealmImport("../.files")
+    .WithRealmImport("../.files/evently-realm-export.json")
     .WithOtlpExporter();
 
 // IResourceBuilder<ParameterResource> rabbitmqUsername = builder.AddParameter("username", "guest", secret: true);
@@ -45,7 +45,7 @@ builder.AddProject<Evently_Api>("evently-api")
     .WaitFor(eventlyDb)
     .WithReference(redis)
     .WaitFor(redis)
-    .WithReference(keycloak.GetEndpoint("http"))
+    .WithReference(keycloak.GetEndpoint("keycloak-endpoint"))
     .WaitFor(keycloak);
 // .WithReference(rabbitmq)
 // .WaitFor(rabbitmq);

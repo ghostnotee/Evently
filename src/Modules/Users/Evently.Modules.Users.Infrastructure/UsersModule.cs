@@ -1,8 +1,10 @@
 ﻿using Evently.Common.Infrastructure.Interceptors;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Users.Application.Abstractions.Data;
+using Evently.Modules.Users.Application.Abstractions.Identity;
 using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.Infrastructure.Database;
+using Evently.Modules.Users.Infrastructure.Identity;
 using Evently.Modules.Users.Infrastructure.Users;
 using Evently.Modules.Users.Presentation;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Evently.Modules.Users.Infrastructure;
 
@@ -25,6 +28,18 @@ public static class UsersModule
 
         private void AddInfrastructure()
         {
+            builder.Services.Configure<KeyCloakOptions>(builder.Configuration.GetSection("Users:KeyCloak"));
+            builder.Services.AddTransient<KeyCloakAuthDelegatingHandler>();
+            builder.Services
+                .AddHttpClient<KeyCloakClient>((serviceProvider, httpClient) =>
+                {
+                    KeyCloakOptions keyCloakOptions = serviceProvider.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
+                    httpClient.BaseAddress = new Uri(keyCloakOptions.AdminUrl);
+                })
+                .AddHttpMessageHandler<KeyCloakAuthDelegatingHandler>();
+            
+            builder.Services.AddTransient<IIdentityProviderService, IdentityProviderService>();
+            
             string connectionString = builder.Configuration.GetConnectionString("evently-db")
                                       ?? throw new InvalidOperationException(
                                           "Connection string 'evently-db' was not found.");
