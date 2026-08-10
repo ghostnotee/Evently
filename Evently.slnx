@@ -47,4 +47,10 @@
         <Project Path="src/Modules/Users/Evently.Modules.Users.IntegrationEvents/Evently.Modules.Users.IntegrationEvents.csproj" />
         <Project Path="src/Modules/Users/Evently.Modules.Users.Presentation/Evently.Modules.Users.Presentation.csproj" />
     </Folder>
+    <Folder Name="/src/Modules/Users/test/">
+        <Project Path="src/Modules/Users/Evently.Modules.Users.ArchitectureTests/Evently.Modules.Users.ArchitectureTests.csproj" />
+    </Folder>
+    <Folder Name="/test/">
+        <Project Path="test/Evently.ArchitectureTests/Evently.ArchitectureTests.csproj" />
+    </Folder>
 </Solution>
