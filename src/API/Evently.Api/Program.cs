@@ -3,7 +3,7 @@ using Evently.Api.Middleware;
 using Evently.Common.Application;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.Endpoints;
-using Evently.Modules.Events.Application;
+using Evently.Modules.Attendance.Infrastructure;
 using Evently.Modules.Events.Infrastructure;
 using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Infrastructure;
@@ -43,13 +43,13 @@ builder.Services.AddOpenApi(options =>
 
 
 builder.Services.AddApplication([
-    AssemblyReference.Assembly,
+    Evently.Modules.Events.Application.AssemblyReference.Assembly,
     Evently.Modules.Users.Application.AssemblyReference.Assembly,
-    Evently.Modules.Ticketing.Application.AssemblyReference.Assembly
-]);
+    Evently.Modules.Ticketing.Application.AssemblyReference.Assembly,
+    Evently.Modules.Attendance.Application.AssemblyReference.Assembly]);
 
 builder.AddInfrastructure([TicketingModule.ConfigureConsumers]);
-builder.Configuration.AddModuleConfiguration(["events", "users", "ticketing"]);
+builder.Configuration.AddModuleConfiguration(["events", "users", "ticketing", "attendance"]);
 
 builder.Services.AddHealthChecks()
     .AddRedis(builder.Configuration.GetConnectionString("evently-redis")!)
@@ -58,6 +58,7 @@ builder.Services.AddHealthChecks()
 builder.AddEventsModule();
 builder.AddUsersModule();
 builder.AddTicketingModule();
+builder.AddAttendanceModule();
 
 WebApplication app = builder.Build();
 

@@ -23,7 +23,7 @@ public static class AttendanceModule
 {
     extension(IHostApplicationBuilder builder)
     {
-        public void AddEventsModule()
+        public void AddAttendanceModule()
         {
             builder.AddInfrastructure();
             builder.Services.AddEndpoints(AssemblyReference.Assembly);
