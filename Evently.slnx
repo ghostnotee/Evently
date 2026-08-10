@@ -19,6 +19,13 @@
         <Project Path="src/Common/Evently.Common.Presentation/Evently.Common.Presentation.csproj" />
     </Folder>
     <Folder Name="/src/Modules/" />
+    <Folder Name="/src/Modules/Attendance/">
+        <Project Path="src/Modules/Attendance/Evently.Modules.Attendance.Application/Evently.Modules.Attendance.Application.csproj" />
+        <Project Path="src/Modules/Attendance/Evently.Modules.Attendance.Domain/Evently.Modules.Attendance.Domain.csproj" />
+        <Project Path="src/Modules/Attendance/Evently.Modules.Attendance.Infrastructure/Evently.Modules.Attendance.Infrastructure.csproj" />
+        <Project Path="src/Modules/Attendance/Evently.Modules.Attendance.IntegrationEvents/Evently.Modules.Attendance.IntegrationEvents.csproj" />
+        <Project Path="src/Modules/Attendance/Evently.Modules.Attendance.Presentation/Evently.Modules.Attendance.Presentation.csproj" />
+    </Folder>
     <Folder Name="/src/Modules/Events/">
         <Project Path="src/Modules/Events/Evently.Modules.Events.Application/Evently.Modules.Events.Application.csproj" />
         <Project Path="src/Modules/Events/Evently.Modules.Events.Domain/Evently.Modules.Events.Domain.csproj" />
