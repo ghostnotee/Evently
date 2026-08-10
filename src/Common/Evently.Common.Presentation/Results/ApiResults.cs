@@ -1,7 +1,7 @@
 ﻿using Evently.Common.Domain;
 using Microsoft.AspNetCore.Http;
 
-namespace Evently.Common.Presentation.ApiResults;
+namespace Evently.Common.Presentation.Results;
 
 public static class ApiResults
 {
@@ -12,7 +12,7 @@ public static class ApiResults
             throw new InvalidOperationException();
         }
 
-        return Results.Problem(
+        return Microsoft.AspNetCore.Http.Results.Problem(
             title: GetTitle(result.Error),
             detail: GetDetail(result.Error),
             type: GetType(result.Error.Type),
@@ -52,7 +52,8 @@ public static class ApiResults
         static int GetStatusCode(ErrorType errorType) =>
             errorType switch
             {
-                ErrorType.Validation or ErrorType.Problem => StatusCodes.Status400BadRequest,
+                ErrorType.Validation => StatusCodes.Status400BadRequest,
+                ErrorType.Problem => StatusCodes.Status400BadRequest,
                 ErrorType.NotFound => StatusCodes.Status404NotFound,
                 ErrorType.Conflict => StatusCodes.Status409Conflict,
                 _ => StatusCodes.Status500InternalServerError
@@ -67,7 +68,9 @@ public static class ApiResults
 
             return new Dictionary<string, object?>
             {
-                { "errors", validationError.Errors }
+                {
+                    "errors", validationError.Errors
+                }
             };
         }
     }
