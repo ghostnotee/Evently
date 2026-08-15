@@ -1,4 +1,4 @@
-﻿using Evently.Common.Infrastructure.Interceptors;
+﻿using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Application.Abstractions.Data;
 using Evently.Modules.Events.Domain.Categories;
@@ -38,7 +38,7 @@ public static class EventsModule
                         contextOptionsBuilder => contextOptionsBuilder
                             .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events))
                     .UseSnakeCaseNamingConvention()
-                    .AddInterceptors(provider.GetRequiredService<PublishDomainEventsInterceptor>());
+                    .AddInterceptors(provider.GetRequiredService<InsertOutboxMessagesInterceptor>());
             });
 
             builder.EnrichNpgsqlDbContext<EventsDbContext>();
