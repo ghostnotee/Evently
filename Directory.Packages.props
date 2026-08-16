@@ -4,7 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Static code analysis -->
-    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.19.1" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.32.0.713" />
     <!-- Common Domain -->
     <PackageVersion Include="Ulid" Version="1.4.1" />
@@ -21,6 +20,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.11" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.19.1" />
+    <PackageVersion Include="Scrutor" Version="7.0.0" />
     <!-- Modules -->
     <!-- Events -->
     <!-- Events Application -->
