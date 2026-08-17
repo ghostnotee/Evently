@@ -7,14 +7,14 @@ using Evently.Common.Application.Messaging;
 using Evently.Common.Domain;
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Infrastructure.Serialization;
-using Evently.Modules.Users.Application;
+using Evently.Modules.Ticketing.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Quartz;
 
-namespace Evently.Modules.Users.Infrastructure.Outbox;
+namespace Evently.Modules.Ticketing.Infrastructure.Outbox;
 
 [DisallowConcurrentExecution]
 internal sealed class ProcessOutboxJob(
@@ -24,7 +24,7 @@ internal sealed class ProcessOutboxJob(
     IOptions<OutboxOptions> outboxOptions,
     ILogger<ProcessOutboxJob> logger) : IJob
 {
-    private const string ModuleName = "Users";
+    private const string ModuleName = "Ticketing";
 
     public async Task Execute(IJobExecutionContext context)
     {
@@ -71,6 +71,7 @@ internal sealed class ProcessOutboxJob(
         }
 
         await transaction.CommitAsync(context.CancellationToken);
+
         logger.LogInformation("{Module} - Completed processing outbox messages", ModuleName);
     }
 
@@ -83,20 +84,18 @@ internal sealed class ProcessOutboxJob(
              SELECT
                 id AS {nameof(OutboxMessageResponse.Id)},
                 content AS {nameof(OutboxMessageResponse.Content)}
-             FROM users.outbox_messages
+             FROM ticketing.outbox_messages
              WHERE processed_on_utc IS NULL
              ORDER BY occurred_on_utc
-             LIMIT @BatchSize
+             LIMIT {outboxOptions.Value.BatchSize}
              FOR UPDATE
              """;
 
+#pragma warning disable S2077
         IEnumerable<OutboxMessageResponse> outboxMessages = await connection.QueryAsync<OutboxMessageResponse>(
             sql,
-            new
-            {
-                outboxOptions.Value.BatchSize
-            },
-            transaction);
+            transaction: transaction);
+#pragma warning restore S2077
 
         return outboxMessages.ToList();
     }
@@ -109,7 +108,7 @@ internal sealed class ProcessOutboxJob(
     {
         const string sql =
             """
-            UPDATE users.outbox_messages
+            UPDATE ticketing.outbox_messages
             SET processed_on_utc = @ProcessedOnUtc,
                 error = @Error
             WHERE id = @Id
