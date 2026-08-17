@@ -8,7 +8,7 @@ namespace Evently.Modules.Ticketing.Application.Tickets.ArchiveTicket;
 internal sealed class TicketArchivedDomainEventHandler(IEventBus eventBus)
     : DomainEventHandler<TicketArchivedDomainEvent>
 {
-    public override async Task Handle(
+    public override async Task HandleAsync(
         TicketArchivedDomainEvent domainEvent,
         CancellationToken cancellationToken = default)
     {

@@ -12,7 +12,7 @@ namespace Evently.Modules.Ticketing.Application.Orders.CreateOrder;
 internal sealed class OrderCreatedDomainEventHandler(ISender sender, IEventBus eventBus)
     : DomainEventHandler<OrderCreatedDomainEvent>
 {
-    public override async Task Handle(
+    public override async Task HandleAsync(
         OrderCreatedDomainEvent notification,
         CancellationToken cancellationToken = default)
     {

@@ -8,7 +8,7 @@ namespace Evently.Modules.Ticketing.Application.TicketTypes;
 internal sealed class TicketTypeSoldOutDomainEventHandler(IEventBus eventBus)
     : DomainEventHandler<TicketTypeSoldOutDomainEvent>
 {
-    public override async Task Handle(
+    public override async Task HandleAsync(
         TicketTypeSoldOutDomainEvent domainEvent,
         CancellationToken cancellationToken = default)
     {

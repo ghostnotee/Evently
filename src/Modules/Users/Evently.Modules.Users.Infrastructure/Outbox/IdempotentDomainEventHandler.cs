@@ -11,7 +11,7 @@ internal sealed class IdempotentDomainEventHandler<TDomainEvent>(
     IDomainEventHandler<TDomainEvent> decorated,
     IDbConnectionFactory dbConnectionFactory) : DomainEventHandler<TDomainEvent> where TDomainEvent : IDomainEvent
 {
-    public override async Task Handle(TDomainEvent domainEvent, CancellationToken cancellationToken = default)
+    public override async Task HandleAsync(TDomainEvent domainEvent, CancellationToken cancellationToken = default)
     {
         await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
 
@@ -19,7 +19,7 @@ internal sealed class IdempotentDomainEventHandler<TDomainEvent>(
 
         if (await OutboxConsumerExistsAsync(connection, outboxMessageConsumer)) return;
 
-        await decorated.Handle(domainEvent, cancellationToken);
+        await decorated.HandleAsync(domainEvent, cancellationToken);
 
         await InsertOutboxConsumerAsync(connection, outboxMessageConsumer);
     }

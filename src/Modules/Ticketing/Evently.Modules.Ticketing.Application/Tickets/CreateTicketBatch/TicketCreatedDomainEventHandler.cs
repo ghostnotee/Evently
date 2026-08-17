@@ -12,7 +12,7 @@ namespace Evently.Modules.Ticketing.Application.Tickets.CreateTicketBatch;
 internal sealed class TicketCreatedDomainEventHandler(ISender sender, IEventBus eventBus)
     : DomainEventHandler<TicketCreatedDomainEvent>
 {
-    public override async Task Handle(
+    public override async Task HandleAsync(
         TicketCreatedDomainEvent domainEvent,
         CancellationToken cancellationToken = default)
     {

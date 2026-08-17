@@ -12,7 +12,7 @@ namespace Evently.Modules.Events.Application.Events.PublishEvent;
 internal sealed class EventPublishedDomainEventHandler(ISender sender, IEventBus eventBus)
     : DomainEventHandler<EventPublishedDomainEvent>
 {
-    public override async Task Handle(
+    public override async Task HandleAsync(
         EventPublishedDomainEvent domainEvent,
         CancellationToken cancellationToken = default)
     {

@@ -53,7 +53,7 @@ internal sealed class ProcessOutboxJob(
 
                 foreach (IDomainEventHandler domainEventHandler in domainEventHandlers)
                 {
-                    await domainEventHandler.Handle(domainEvent, context.CancellationToken);
+                    await domainEventHandler.HandleAsync(domainEvent, context.CancellationToken);
                 }
             }
             catch (Exception caughtException)

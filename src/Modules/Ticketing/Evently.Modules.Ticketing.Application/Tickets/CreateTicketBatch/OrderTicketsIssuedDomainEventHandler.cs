@@ -11,7 +11,7 @@ namespace Evently.Modules.Ticketing.Application.Tickets.CreateTicketBatch;
 internal sealed class OrderTicketsIssuedDomainEventHandler(ISender sender)
     : DomainEventHandler<OrderTicketsIssuedDomainEvent>
 {
-    public override async Task Handle(
+    public override async Task HandleAsync(
         OrderTicketsIssuedDomainEvent domainEvent,
         CancellationToken cancellationToken = default)
     {
