@@ -49,12 +49,16 @@ public static class EventsModule
             });
 
             builder.EnrichNpgsqlDbContext<EventsDbContext>();
-
+            builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
             builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-            builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
+            builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Events:Outbox"));
+            builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+
+            builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Events:Inbox"));
+            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
         }
     }
 

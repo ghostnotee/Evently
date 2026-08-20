@@ -3,6 +3,7 @@ using Evently.Common.Application.Messaging;
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.IntegrationEvents;
+using Evently.Modules.Ticketing.Application.Abstractions.Authentication;
 using Evently.Modules.Ticketing.Application.Abstractions.Data;
 using Evently.Modules.Ticketing.Application.Abstractions.Payments;
 using Evently.Modules.Ticketing.Application.Carts;
@@ -11,6 +12,7 @@ using Evently.Modules.Ticketing.Domain.Events;
 using Evently.Modules.Ticketing.Domain.Orders;
 using Evently.Modules.Ticketing.Domain.Payments;
 using Evently.Modules.Ticketing.Domain.Tickets;
+using Evently.Modules.Ticketing.Infrastructure.Authentication;
 using Evently.Modules.Ticketing.Infrastructure.Customers;
 using Evently.Modules.Ticketing.Infrastructure.Database;
 using Evently.Modules.Ticketing.Infrastructure.Events;
@@ -66,7 +68,7 @@ public static class TicketingModule
             });
 
             builder.EnrichNpgsqlDbContext<TicketingDbContext>();
-
+            builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<TicketingDbContext>());
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
@@ -74,10 +76,17 @@ public static class TicketingModule
             builder.Services.AddScoped<ITicketRepository, TicketRepository>();
             builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
-            builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<TicketingDbContext>());
 
             builder.Services.AddSingleton<CartService>();
             builder.Services.AddSingleton<IPaymentService, PaymentService>();
+
+            builder.Services.AddScoped<ICustomerContext, CustomerContext>();
+
+            builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Ticketing:Outbox"));
+            builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+
+            builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Ticketing:Inbox"));
+            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
         }
     }
 
@@ -103,10 +112,10 @@ public static class TicketingModule
             services.Decorate(domainEventHandler, closedIdempotentHandler);
         }
     }
-    
+
     private static void AddIntegrationEventHandlers(this IServiceCollection services)
     {
-        Type[] integrationEventHandlers = Presentation.AssemblyReference.Assembly
+        Type[] integrationEventHandlers = AssemblyReference.Assembly
             .GetTypes()
             .Where(t => t.IsAssignableTo(typeof(IIntegrationEventHandler)))
             .ToArray();

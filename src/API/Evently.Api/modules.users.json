@@ -1,8 +1,12 @@
 {
   "Users": {
     "Outbox": {
-      "IntervalInSeconds": 15,
-      "BatchSize": 20
+      "IntervalInSeconds": 5,
+      "BatchSize": 50
+    },
+    "Inbox": {
+      "IntervalInSeconds": 5,
+      "BatchSize": 50
     },
     "KeyCloak": {
       "AdminUrl": "",

@@ -68,6 +68,12 @@ public static class AttendanceModule
             builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<ITicketRepository, TicketRepository>();
             builder.Services.AddScoped<IAttendanceContext, AttendanceContext>();
+            
+            builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Attendance:Outbox"));
+            builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+
+            builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Attendance:Inbox"));
+            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
         }
     }
 
