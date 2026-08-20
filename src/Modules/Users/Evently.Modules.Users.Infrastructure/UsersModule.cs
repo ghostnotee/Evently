@@ -63,11 +63,14 @@ public static class UsersModule
             });
 
             builder.EnrichNpgsqlDbContext<UsersDbContext>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
-            builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Users:Outbox"));
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+            builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Users:Outbox"));
             builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+
+            builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Users:Inbox"));
+            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
         }
     }
 
