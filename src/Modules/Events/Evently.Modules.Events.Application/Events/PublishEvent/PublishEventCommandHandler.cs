@@ -15,22 +15,13 @@ internal sealed class PublishEventCommandHandler(
     {
         Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 
-        if (@event is null)
-        {
-            return Result.Failure(EventErrors.NotFound(request.EventId));
-        }
+        if (@event is null) return Result.Failure(EventErrors.NotFound(request.EventId));
 
-        if (!await ticketTypeRepository.ExistsAsync(@event.Id, cancellationToken))
-        {
-            return Result.Failure(EventErrors.NoTicketsFound);
-        }
+        if (!await ticketTypeRepository.ExistsAsync(@event.Id, cancellationToken)) return Result.Failure(EventErrors.NoTicketsFound);
 
         Result result = @event.Publish();
 
-        if (result.IsFailure)
-        {
-            return Result.Failure(result.Error);
-        }
+        if (result.IsFailure) return Result.Failure(result.Error);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

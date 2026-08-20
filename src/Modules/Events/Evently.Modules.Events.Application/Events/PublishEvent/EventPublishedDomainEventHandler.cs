@@ -9,8 +9,7 @@ using MediatR;
 
 namespace Evently.Modules.Events.Application.Events.PublishEvent;
 
-internal sealed class EventPublishedDomainEventHandler(ISender sender, IEventBus eventBus)
-    : DomainEventHandler<EventPublishedDomainEvent>
+internal sealed class EventPublishedDomainEventHandler(ISender sender, IEventBus eventBus) : DomainEventHandler<EventPublishedDomainEvent>
 {
     public override async Task HandleAsync(
         EventPublishedDomainEvent domainEvent,
