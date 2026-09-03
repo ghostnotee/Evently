@@ -9,8 +9,7 @@ using MediatR;
 
 namespace Evently.Modules.Users.Application.Users.RegisterUser;
 
-internal sealed class UserRegisteredDomainEventHandler(ISender sender, IEventBus bus)
-    : DomainEventHandler<UserRegisteredDomainEvent>
+internal sealed class UserRegisteredDomainEventHandler(ISender sender, IEventBus bus) : DomainEventHandler<UserRegisteredDomainEvent>
 {
     public override async Task HandleAsync(
         UserRegisteredDomainEvent domainEvent,

@@ -11,8 +11,7 @@ internal sealed class CreateTicketBatchCommandHandler(
     IOrderRepository orderRepository,
     ITicketTypeRepository ticketTypeRepository,
     ITicketRepository ticketRepository,
-    IUnitOfWork unitOfWork)
-    : ICommandHandler<CreateTicketBatchCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateTicketBatchCommand>
 {
     public async Task<Result> Handle(CreateTicketBatchCommand request, CancellationToken cancellationToken)
     {
