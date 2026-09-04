@@ -196,6 +196,41 @@ namespace Evently.Modules.Attendance.Infrastructure.Database.Migrations
                     b.ToTable("events", "attendance");
                 });
 
+            modelBuilder.Entity("Evently.Modules.Attendance.Domain.Events.EventStatistics", b =>
+                {
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("event_id");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<DateTime?>("EndsAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("ends_at_utc");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("location");
+
+                    b.Property<DateTime>("StartsAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("starts_at_utc");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
+                    b.HasKey("EventId")
+                        .HasName("pk_event_statistics");
+
+                    b.ToTable("event_statistics", "attendance");
+                });
+
             modelBuilder.Entity("Evently.Modules.Attendance.Domain.Tickets.Ticket", b =>
                 {
                     b.Property<Guid>("Id")
