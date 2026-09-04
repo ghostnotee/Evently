@@ -14,13 +14,13 @@ public sealed class EventStatistics
 
     public DateTime? EndsAtUtc { get; private set; }
 
-    public int TicketsSold { get; }
+    public int TicketsSold { get; init; }
 
-    public int AttendeesCheckedIn { get; }
+    public int AttendeesCheckedIn { get; init; }
 
-    public List<string> DuplicateCheckInTickets { get; }
+    public List<string> DuplicateCheckInTickets { get; init; }
 
-    public List<string> InvalidCheckInTickets { get; }
+    public List<string> InvalidCheckInTickets { get; init; }
 
     public static EventStatistics Create(
         Guid id,
