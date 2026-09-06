@@ -6,8 +6,8 @@ using Evently.Modules.Attendance.Domain.Events;
 
 namespace Evently.Modules.Attendance.Application.EventStatistics.Projections;
 
-internal sealed class EventCreatedDomainEventHandler(IDbConnectionFactory dbConnectionFactory)
-    : DomainEventHandler<EventCreatedDomainEvent>
+internal sealed class EventCreatedDomainEventHandler(
+    IDbConnectionFactory dbConnectionFactory) : DomainEventHandler<EventCreatedDomainEvent>
 {
     public override async Task HandleAsync(
         EventCreatedDomainEvent domainEvent,

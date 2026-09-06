@@ -7,8 +7,7 @@ namespace Evently.Modules.Attendance.Application.Events.CreateEvent;
 
 internal sealed class CreateEventCommandHandler(
     IEventRepository eventRepository,
-    IUnitOfWork unitOfWork)
-    : ICommandHandler<CreateEventCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateEventCommand>
 {
     public async Task<Result> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
