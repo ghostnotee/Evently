@@ -15,28 +15,25 @@ internal sealed class ArchiveTicketsForEventCommandHandler(
 {
     public async Task<Result> Handle(ArchiveTicketsForEventCommand request, CancellationToken cancellationToken)
     {
-        await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
-
-        Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
-
-        if (@event is null)
+        return await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
-            return Result.Failure(EventErrors.NotFound(request.EventId));
-        }
+            Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 
-        IEnumerable<Ticket> tickets = await ticketRepository.GetForEventAsync(@event, cancellationToken);
+            if (@event is null)
+            {
+                return Result.Failure(EventErrors.NotFound(request.EventId));
+            }
 
-        foreach (Ticket ticket in tickets)
-        {
-            ticket.Archive();
-        }
+            IEnumerable<Ticket> tickets = await ticketRepository.GetForEventAsync(@event, cancellationToken);
 
-        @event.TicketsArchived();
+            foreach (Ticket ticket in tickets)
+            {
+                ticket.Archive();
+            }
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+            @event.TicketsArchived();
 
-        await transaction.CommitAsync(cancellationToken);
-
-        return Result.Success();
+            return Result.Success();
+        }, cancellationToken);
     }
 }

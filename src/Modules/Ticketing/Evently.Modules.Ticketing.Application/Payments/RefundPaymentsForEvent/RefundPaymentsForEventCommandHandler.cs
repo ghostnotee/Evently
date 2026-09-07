@@ -15,28 +15,25 @@ internal sealed class RefundPaymentsForEventCommandHandler(
 {
     public async Task<Result> Handle(RefundPaymentsForEventCommand request, CancellationToken cancellationToken)
     {
-        await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
-
-        Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
-
-        if (@event is null)
+        return await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
-            return Result.Failure(EventErrors.NotFound(request.EventId));
-        }
+            Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 
-        IEnumerable<Payment> payments = await paymentRepository.GetForEventAsync(@event, cancellationToken);
+            if (@event is null)
+            {
+                return Result.Failure(EventErrors.NotFound(request.EventId));
+            }
 
-        foreach (Payment payment in payments)
-        {
-            payment.Refund(payment.Amount - (payment.AmountRefunded ?? decimal.Zero));
-        }
+            IEnumerable<Payment> payments = await paymentRepository.GetForEventAsync(@event, cancellationToken);
 
-        @event.PaymentsRefunded();
+            foreach (Payment payment in payments)
+            {
+                payment.Refund(payment.Amount - (payment.AmountRefunded ?? decimal.Zero));
+            }
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+            @event.PaymentsRefunded();
 
-        await transaction.CommitAsync(cancellationToken);
-
-        return Result.Success();
+            return Result.Success();
+        }, cancellationToken);
     }
 }
