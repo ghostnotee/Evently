@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Evently.Modules.Attendance.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(AttendanceDbContext))]
-    [Migration("20260904174603_MaterializedViews2")]
-    partial class MaterializedViews2
+    [Migration("20260906194747_Initialize")]
+    partial class Initialize
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
