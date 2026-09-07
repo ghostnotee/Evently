@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using Evently.Common.Domain;
 using Evently.Common.Infrastructure.Inbox;
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Modules.Ticketing.Application.Abstractions.Data;
@@ -34,6 +35,54 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
 
     internal DbSet<Payment> Payments { get; set; }
 
+    // public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+    // {
+    //     if (Database.CurrentTransaction is not null)
+    //     {
+    //         await Database.CurrentTransaction.DisposeAsync();
+    //     }
+    //
+    //     return (await Database.BeginTransactionAsync(cancellationToken)).GetDbTransaction();
+    // }
+
+    public async Task<Result> ExecuteInTransactionAsync(Func<Task<Result>> operation, CancellationToken cancellationToken = default)
+    {
+        // 1. Retry stratejisini alıyoruz (PostgreSQL için NpgsqlRetryingExecutionStrategy)
+        IExecutionStrategy strategy = Database.CreateExecutionStrategy();
+
+        // 2. Tüm transaction bloğunu strateji içinde çalıştırıyoruz
+        return await strategy.ExecuteAsync(async () =>
+        {
+            await using IDbContextTransaction transaction =
+                await Database.BeginTransactionAsync(cancellationToken);
+
+            try
+            {
+                // Handler'dan gelen iş mantığını çalıştır
+                Result result = await operation();
+
+                // Eğer iş mantığı başarısız olduysa (örn: Müşteri yok), Rollback yap ve hatayı döndür.
+                if (result.IsFailure)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                    return result;
+                }
+
+                // İş mantığı başarılıysa veritabanına kaydet ve commit et.
+                await SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+
+                return result;
+            }
+            catch (Exception)
+            {
+                // Beklenmedik bir hata (örn: DB bağlantı kopması, exception) olursa Rollback yap ve fırlat.
+                await transaction.RollbackAsync(cancellationToken);
+                throw;
+            }
+        });
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schemas.Ticketing);
@@ -49,15 +98,5 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
         modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
         modelBuilder.ApplyConfiguration(new TicketConfiguration());
         modelBuilder.ApplyConfiguration(new PaymentConfiguration());
-    }
-
-    public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
-    {
-        if (Database.CurrentTransaction is not null)
-        {
-            await Database.CurrentTransaction.DisposeAsync();
-        }
-
-        return (await Database.BeginTransactionAsync(cancellationToken)).GetDbTransaction();
     }
 }

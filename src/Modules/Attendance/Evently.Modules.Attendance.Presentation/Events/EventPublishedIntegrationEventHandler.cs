@@ -7,8 +7,8 @@ using MediatR;
 
 namespace Evently.Modules.Attendance.Presentation.Events;
 
-internal sealed class EventPublishedIntegrationEventHandler(ISender sender)
-    : IntegrationEventHandler<EventPublishedIntegrationEvent>
+internal sealed class EventPublishedIntegrationEventHandler(
+    ISender sender) : IntegrationEventHandler<EventPublishedIntegrationEvent>
 {
     public override async Task Handle(
         EventPublishedIntegrationEvent integrationEvent,

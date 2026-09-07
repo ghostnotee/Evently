@@ -8,8 +8,7 @@ namespace Evently.Modules.Ticketing.Application.Carts.AddItemToCart;
 internal sealed class AddItemToCartCommandHandler(
     ICustomerRepository customerRepository,
     ITicketTypeRepository ticketTypeRepository,
-    CartService cartService)
-    : ICommandHandler<AddItemToCartCommand>
+    CartService cartService) : ICommandHandler<AddItemToCartCommand>
 {
     public async Task<Result> Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
     {
