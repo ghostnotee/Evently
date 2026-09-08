@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Evently.Common.Domain;
+﻿using Evently.Common.Domain;
 using Evently.Common.Infrastructure.Inbox;
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Modules.Ticketing.Application.Abstractions.Data;
@@ -34,16 +33,6 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
     internal DbSet<Ticket> Tickets { get; set; }
 
     internal DbSet<Payment> Payments { get; set; }
-
-    // public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
-    // {
-    //     if (Database.CurrentTransaction is not null)
-    //     {
-    //         await Database.CurrentTransaction.DisposeAsync();
-    //     }
-    //
-    //     return (await Database.BeginTransactionAsync(cancellationToken)).GetDbTransaction();
-    // }
 
     public async Task<Result> ExecuteInTransactionAsync(Func<Task<Result>> operation, CancellationToken cancellationToken = default)
     {
