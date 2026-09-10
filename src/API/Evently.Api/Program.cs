@@ -42,7 +42,6 @@ builder.Services.AddOpenApi(options =>
     };
 });
 
-
 builder.Services.AddApplication([
     AssemblyReference.Assembly,
     Evently.Modules.Users.Application.AssemblyReference.Assembly,
@@ -50,14 +49,16 @@ builder.Services.AddApplication([
     Evently.Modules.Attendance.Application.AssemblyReference.Assembly
 ]);
 
+string connectionStringCache = builder.Configuration.GetConnectionString("evently-redis")!;
 builder.AddInfrastructure([
+    EventsModule.ConfigureConsumers(connectionStringCache),
     TicketingModule.ConfigureConsumers,
     AttendanceModule.ConfigureConsumers
 ]);
 builder.Configuration.AddModuleConfiguration(["events", "users", "ticketing", "attendance"]);
 
 builder.Services.AddHealthChecks()
-    .AddRedis(builder.Configuration.GetConnectionString("evently-redis")!)
+    .AddRedis(connectionStringCache)
     .AddUrlGroup(new Uri(builder.Configuration["Keycloak:HealthUrl"]!), HttpMethod.Get, "keycloak");
 
 builder.AddEventsModule();

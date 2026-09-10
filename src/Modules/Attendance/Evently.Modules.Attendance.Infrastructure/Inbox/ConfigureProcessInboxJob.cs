@@ -3,8 +3,8 @@ using Quartz;
 
 namespace Evently.Modules.Attendance.Infrastructure.Inbox;
 
-internal sealed class ConfigureProcessInboxJob(IOptions<InboxOptions> outboxOptions)
-    : IConfigureOptions<QuartzOptions>
+internal sealed class ConfigureProcessInboxJob(
+    IOptions<InboxOptions> outboxOptions) : IConfigureOptions<QuartzOptions>
 {
     private readonly InboxOptions _inboxOptions = outboxOptions.Value;
 

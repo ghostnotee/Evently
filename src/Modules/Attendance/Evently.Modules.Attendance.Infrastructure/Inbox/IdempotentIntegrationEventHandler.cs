@@ -8,9 +8,7 @@ namespace Evently.Modules.Attendance.Infrastructure.Inbox;
 
 internal sealed class IdempotentIntegrationEventHandler<TIntegrationEvent>(
     IIntegrationEventHandler<TIntegrationEvent> decorated,
-    IDbConnectionFactory dbConnectionFactory)
-    : IntegrationEventHandler<TIntegrationEvent>
-    where TIntegrationEvent : IIntegrationEvent
+    IDbConnectionFactory dbConnectionFactory) : IntegrationEventHandler<TIntegrationEvent> where TIntegrationEvent : IIntegrationEvent
 {
     public override async Task Handle(
         TIntegrationEvent integrationEvent,

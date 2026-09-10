@@ -7,8 +7,8 @@ using MediatR;
 
 namespace Evently.Modules.Ticketing.Application.Events.CancelEvent;
 
-internal sealed class ArchiveTicketsEventCanceledDomainEventHandler(ISender sender)
-    : DomainEventHandler<EventCanceledDomainEvent>
+internal sealed class ArchiveTicketsEventCanceledDomainEventHandler(
+    ISender sender) : DomainEventHandler<EventCanceledDomainEvent>
 {
     public override async Task HandleAsync(
         EventCanceledDomainEvent domainEvent,
