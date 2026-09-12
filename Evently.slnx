@@ -37,7 +37,8 @@
         <Project Path="src/Modules/Events/Evently.Modules.Events.Presentation/Evently.Modules.Events.Presentation.csproj" />
     </Folder>
     <Folder Name="/src/Modules/Events/test/">
-        <Project Path="src/Modules/Events/Evently.Modules.Events.ArchitectureTests/Evently.Modules.Events.ArchitectureTests.csproj" />
+        <Project Path="src/Modules/Events/test/Evently.Modules.Events.ArchitectureTests/Evently.Modules.Events.ArchitectureTests.csproj" />
+        <Project Path="src/Modules/Events/test/Evently.Modules.Events.UnitTests/Evently.Modules.Events.UnitTests.csproj" />
     </Folder>
     <Folder Name="/src/Modules/Ticketing/">
         <Project Path="src/Modules/Ticketing/Evently.Modules.Ticketing.Application/Evently.Modules.Ticketing.Application.csproj" />
@@ -57,9 +58,11 @@
         <Project Path="src/Modules/Users/Evently.Modules.Users.Presentation/Evently.Modules.Users.Presentation.csproj" />
     </Folder>
     <Folder Name="/src/Modules/Users/test/">
-        <Project Path="src/Modules/Users/Evently.Modules.Users.ArchitectureTests/Evently.Modules.Users.ArchitectureTests.csproj" />
+        <Project Path="src/Modules/Users/test/Evently.Modules.Users.ArchitectureTests/Evently.Modules.Users.ArchitectureTests.csproj" />
+        <Project Path="src/Modules/Users/test/Evently.Modules.Users.IntegrationTests/Evently.Modules.Users.IntegrationTests.csproj" />
     </Folder>
     <Folder Name="/test/">
         <Project Path="test/Evently.ArchitectureTests/Evently.ArchitectureTests.csproj" />
+        <Project Path="test/Evently.IntegrationTests/Evently.IntegrationTests.csproj" />
     </Folder>
 </Solution>
