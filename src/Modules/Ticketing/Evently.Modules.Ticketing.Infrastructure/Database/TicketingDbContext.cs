@@ -1,4 +1,4 @@
-﻿using Evently.Common.Domain;
+﻿using System.Data.Common;
 using Evently.Common.Infrastructure.Inbox;
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Modules.Ticketing.Application.Abstractions.Data;
@@ -17,8 +17,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Evently.Modules.Ticketing.Infrastructure.Database;
 
-public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> options)
-    : DbContext(options), IUnitOfWork
+public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> options) : DbContext(options), IUnitOfWork
 {
     internal DbSet<Customer> Customers { get; set; }
 
@@ -34,38 +33,33 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
 
     internal DbSet<Payment> Payments { get; set; }
 
-    public async Task<Result> ExecuteInTransactionAsync(Func<Task<Result>> operation, CancellationToken cancellationToken = default)
+    public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
-        // 1. Retry stratejisini alıyoruz (PostgreSQL için NpgsqlRetryingExecutionStrategy)
+        if (Database.CurrentTransaction is not null)
+        {
+            await Database.CurrentTransaction.DisposeAsync();
+        }
+
+        return (await Database.BeginTransactionAsync(cancellationToken)).GetDbTransaction();
+    }
+
+    public async Task<TResult> ExecuteInTransactionAsync<TResult>(
+        Func<Task<TResult>> operation,
+        CancellationToken cancellationToken = default)
+    {
         IExecutionStrategy strategy = Database.CreateExecutionStrategy();
 
-        // 2. Tüm transaction bloğunu strateji içinde çalıştırıyoruz
         return await strategy.ExecuteAsync(async () =>
         {
-            await using IDbContextTransaction transaction =
-                await Database.BeginTransactionAsync(cancellationToken);
-
+            await using IDbContextTransaction transaction = await Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                // Handler'dan gelen iş mantığını çalıştır
-                Result result = await operation();
-
-                // Eğer iş mantığı başarısız olduysa (örn: Müşteri yok), Rollback yap ve hatayı döndür.
-                if (result.IsFailure)
-                {
-                    await transaction.RollbackAsync(cancellationToken);
-                    return result;
-                }
-
-                // İş mantığı başarılıysa veritabanına kaydet ve commit et.
-                await SaveChangesAsync(cancellationToken);
+                TResult result = await operation();
                 await transaction.CommitAsync(cancellationToken);
-
                 return result;
             }
-            catch (Exception)
+            catch
             {
-                // Beklenmedik bir hata (örn: DB bağlantı kopması, exception) olursa Rollback yap ve fırlat.
                 await transaction.RollbackAsync(cancellationToken);
                 throw;
             }

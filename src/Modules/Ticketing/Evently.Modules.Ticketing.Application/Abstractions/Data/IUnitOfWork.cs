@@ -1,4 +1,4 @@
-﻿using Evently.Common.Domain;
+﻿using System.Data.Common;
 
 namespace Evently.Modules.Ticketing.Application.Abstractions.Data;
 
@@ -6,9 +6,9 @@ public interface IUnitOfWork
 {
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
-    //Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
+    Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
 
-    Task<Result> ExecuteInTransactionAsync(
-        Func<Task<Result>> operation,
+    Task<TResult> ExecuteInTransactionAsync<TResult>(
+        Func<Task<TResult>> operation,
         CancellationToken cancellationToken = default);
 }
