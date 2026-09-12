@@ -37,7 +37,8 @@
         <Project Path="src/Modules/Events/Evently.Modules.Events.Presentation/Evently.Modules.Events.Presentation.csproj" />
     </Folder>
     <Folder Name="/src/Modules/Events/test/">
-        <Project Path="src/Modules/Events/Evently.Modules.Events.ArchitectureTests/Evently.Modules.Events.ArchitectureTests.csproj" />
+        <Project Path="src/Modules/Events/test/Evently.Modules.Events.ArchitectureTests/Evently.Modules.Events.ArchitectureTests.csproj" />
+        <Project Path="src/Modules/Events/test/Evently.Modules.Events.UnitTests/Evently.Modules.Events.UnitTests.csproj" />
     </Folder>
     <Folder Name="/src/Modules/Ticketing/">
         <Project Path="src/Modules/Ticketing/Evently.Modules.Ticketing.Application/Evently.Modules.Ticketing.Application.csproj" />
