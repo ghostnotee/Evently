@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Evently.Common.Application.Messaging;
+﻿using Evently.Common.Application.Messaging;
 using Evently.Common.Domain;
 using Evently.Modules.Ticketing.Application.Abstractions.Data;
 using Evently.Modules.Ticketing.Domain.Events;
@@ -10,11 +9,11 @@ namespace Evently.Modules.Ticketing.Application.Tickets.ArchiveTicketsForEvent;
 internal sealed class ArchiveTicketsForEventCommandHandler(
     IEventRepository eventRepository,
     ITicketRepository ticketRepository,
-    IUnitOfWork unitOfWork)
-    : ICommandHandler<ArchiveTicketsForEventCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<ArchiveTicketsForEventCommand>
 {
     public async Task<Result> Handle(ArchiveTicketsForEventCommand request, CancellationToken cancellationToken)
     {
+        // Tüm iş mantığını ve SaveChanges'ı stratejiye sarmalayıp gönderiyoruz
         return await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
             Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
@@ -32,6 +31,8 @@ internal sealed class ArchiveTicketsForEventCommandHandler(
             }
 
             @event.TicketsArchived();
+
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Result.Success();
         }, cancellationToken);

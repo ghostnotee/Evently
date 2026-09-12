@@ -13,21 +13,32 @@ using Evently.Modules.Events.Infrastructure.Inbox;
 using Evently.Modules.Events.Infrastructure.Outbox;
 using Evently.Modules.Events.Infrastructure.TicketTypes;
 using Evently.Modules.Events.Presentation;
+using Evently.Modules.Events.Presentation.Events.CancelEventSaga;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using IRegistrationConfigurator = MassTransit.IRegistrationConfigurator;
 
 namespace Evently.Modules.Events.Infrastructure;
 
 public static class EventsModule
 {
+    public static Action<IRegistrationConfigurator> ConfigureConsumers(string redisConnectionString)
+    {
+        return registrationConfigurator => registrationConfigurator
+            .AddSagaStateMachine<CancelEventSaga, CancelEventState>()
+            .RedisRepository(redisConnectionString);
+    }
+
     extension(IHostApplicationBuilder builder)
     {
         public void AddEventsModule()
         {
+            builder.Configuration.GetConnectionString("Cache");
             builder.Services.AddDomainEventHandlers();
             builder.Services.AddIntegrationEventHandlers();
             builder.AddInfrastructure();

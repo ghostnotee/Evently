@@ -44,21 +44,25 @@ public sealed class Payment : Entity
 
     public Result Refund(decimal refundAmount)
     {
-        if (AmountRefunded.HasValue && AmountRefunded == Amount)
+        // Mevcut iade edilmiş tutarı güvenli alıyoruz (null ise 0)
+        decimal currentRefunded = AmountRefunded ?? decimal.Zero;
+
+        if (currentRefunded == Amount)
         {
             return Result.Failure(PaymentErrors.AlreadyRefunded);
         }
 
-        if (AmountRefunded + refundAmount > Amount)
+        if (currentRefunded + refundAmount > Amount)
         {
             return Result.Failure(PaymentErrors.NotEnoughFunds);
         }
 
-        AmountRefunded += refundAmount;
+        // Null hatasını önlemek için atamayı güvenli yapıyoruz
+        AmountRefunded = currentRefunded + refundAmount;
 
         if (Amount == AmountRefunded)
         {
-            RefundedAtUtc = DateTime.UtcNow; // Set refunded date when fully refunded
+            RefundedAtUtc = DateTime.UtcNow;
             Raise(new PaymentRefundedDomainEvent(Id, TransactionId, refundAmount));
         }
         else
