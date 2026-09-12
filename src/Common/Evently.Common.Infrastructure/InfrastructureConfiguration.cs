@@ -33,7 +33,12 @@ public static class InfrastructureConfiguration
         builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
         SqlMapper.AddTypeHandler(new GenericArrayHandler<string>());
 
-        builder.Services.AddQuartz();
+        builder.Services.AddQuartz(configurator =>
+        {
+            var scheduler = Guid.NewGuid();
+            configurator.SchedulerId = $"default-id-{scheduler}";
+            configurator.SchedulerName = $"default-name-{scheduler}";
+        });
         builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
         builder.Services.TryAddSingleton<InsertOutboxMessagesInterceptor>();

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Evently.Modules.Users.Infrastructure\Evently.Modules.Users.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Evently.Modules.Users.Infrastructure\Evently.Modules.Users.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
