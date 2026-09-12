@@ -8,19 +8,20 @@ namespace Evently.Modules.Events.Presentation.Events.CancelEventSaga;
 [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed")]
 public sealed class CancelEventSaga : MassTransitStateMachine<CancelEventState>
 {
+    public State CancellationStarted { get; private set; }
+    public State PaymentsRefunded { get; private set; }
+    public State TicketsArchived { get; private set; }
+
+    public Event<EventCanceledIntegrationEvent> EventCanceled { get; private set; }
+    public Event<EventPaymentsRefundedIntegrationEvent> EventPaymentsRefunded { get; private set; }
+    public Event<EventTicketsArchivedIntegrationEvent> EventTicketsArchived { get; private set; }
+    public Event EventCancellationCompleted { get; private set; }
+
     public CancelEventSaga()
     {
-        Event(() => EventCanceled,
-            c
-                => c.CorrelateById(m
-                    => m.Message.EventId));
-        Event(() => EventPaymentsRefunded,
-            c 
-                => c.CorrelateById(m 
-                    => m.Message.EventId));
-        Event(() => EventTicketsArchived, c
-            => c.CorrelateById(m
-                => m.Message.EventId));
+        Event(() => EventCanceled, c => c.CorrelateById(m => m.Message.EventId));
+        Event(() => EventPaymentsRefunded, c => c.CorrelateById(m => m.Message.EventId));
+        Event(() => EventTicketsArchived, c => c.CorrelateById(m => m.Message.EventId));
 
         InstanceState(s => s.CurrentState);
 
@@ -56,18 +57,9 @@ public sealed class CancelEventSaga : MassTransitStateMachine<CancelEventState>
             When(EventCancellationCompleted)
                 .Publish(context =>
                     new EventCancellationCompletedIntegrationEvent(
-                        Guid.CreateVersion7(),
+                        Guid.NewGuid(),
                         DateTime.UtcNow,
                         context.Saga.CorrelationId))
                 .Finalize());
     }
-
-    public State CancellationStarted { get; private set; }
-    public State PaymentsRefunded { get; private set; }
-    public State TicketsArchived { get; private set; }
-
-    public Event<EventCanceledIntegrationEvent> EventCanceled { get; private set; }
-    public Event<EventPaymentsRefundedIntegrationEvent> EventPaymentsRefunded { get; private set; }
-    public Event<EventTicketsArchivedIntegrationEvent> EventTicketsArchived { get; private set; }
-    public Event EventCancellationCompleted { get; private set; }
 }
