@@ -14,27 +14,35 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    defaults: 
+      run:
+        working-directory: Evently
+        
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
-        run: dotnet restore Evently.AppHost/Evently.AppHost.csproj
+        run: dotnet restore Evently.slnx
 
       - name: Build
-        run: dotnet build Evently.AppHost/Evently.AppHost.csproj --configuration Release --no-restore
+        run: dotnet build Evently.slnx --configuration Release --no-restore
 
       - name: Test (all test projects)
-        run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test Evently.slnx --configuration Release --no-restore --no-build "trx;LogFileName=test-results.trx"
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results
           path: "**/TestResults/*.trx"
+    
+#      - name: Publish
+#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#        run: dotnet publish Evently.slnx --configuration Release --no-restore --no-build
