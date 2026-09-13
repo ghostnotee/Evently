@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Evently.Modules.Attendance.Application;
+using System.Reflection.Metadata;
 using Evently.Modules.Attendance.Domain.Attendees;
 using Evently.Modules.Attendance.Infrastructure;
 

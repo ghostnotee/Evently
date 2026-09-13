@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Evently.Common.Application.Messaging;
+﻿using Evently.Common.Application.Messaging;
 using Evently.Common.Domain;
 using Evently.Modules.Ticketing.Application.Abstractions.Data;
 using Evently.Modules.Ticketing.Application.Abstractions.Payments;
@@ -22,53 +21,71 @@ internal sealed class CreateOrderCommandHandler(
 {
     public async Task<Result> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
+        Customer? customer = null;
 
-        Customer? customer = await customerRepository.GetAsync(request.CustomerId, cancellationToken);
-
-        if (customer is null) return Result.Failure(CustomerErrors.NotFound(request.CustomerId));
-
-        var order = Order.Create(customer);
-
-        Cart cart = await cartService.GetAsync(customer.Id, cancellationToken);
-
-        if (!cart.Items.Any()) return Result.Failure(CartErrors.Empty);
-
-        foreach (CartItem cartItem in cart.Items)
+        Result result = await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
-            // This acquires a pessimistic lock or throws an exception if already locked.
-            TicketType? ticketType = await ticketTypeRepository.GetWithLockAsync(
-                cartItem.TicketTypeId,
-                cancellationToken);
+            customer = await customerRepository.GetAsync(request.CustomerId, cancellationToken);
 
-            if (ticketType is null) return Result.Failure(TicketTypeErrors.NotFound(cartItem.TicketTypeId));
+            if (customer is null)
+            {
+                return Result.Failure(CustomerErrors.NotFound(request.CustomerId));
+            }
 
-            Result result = ticketType.UpdateQuantity(cartItem.Quantity);
+            var order = Order.Create(customer);
 
-            if (result.IsFailure) return Result.Failure(result.Error);
+            Cart cart = await cartService.GetAsync(customer.Id, cancellationToken);
 
-            order.AddItem(ticketType, cartItem.Quantity, cartItem.Price, ticketType.Currency);
+            if (!cart.Items.Any())
+            {
+                return Result.Failure(CartErrors.Empty);
+            }
+
+            foreach (CartItem cartItem in cart.Items)
+            {
+                // This acquires a pessimistic lock or throws an exception if already locked.
+                TicketType? ticketType = await ticketTypeRepository.GetWithLockAsync(
+                    cartItem.TicketTypeId,
+                    cancellationToken);
+
+                if (ticketType is null)
+                {
+                    return Result.Failure(TicketTypeErrors.NotFound(cartItem.TicketTypeId));
+                }
+
+                Result ticketTypeResult = ticketType.UpdateQuantity(cartItem.Quantity);
+
+                if (ticketTypeResult.IsFailure)
+                {
+                    return Result.Failure(ticketTypeResult.Error);
+                }
+
+                order.AddItem(ticketType, cartItem.Quantity, cartItem.Price, ticketType.Currency);
+            }
+
+            orderRepository.Insert(order);
+
+            // We're faking a payment gateway request here...
+            PaymentResponse paymentResponse = await paymentService.ChargeAsync(order.TotalPrice, order.Currency);
+
+            var payment = Payment.Create(
+                order,
+                paymentResponse.TransactionId,
+                paymentResponse.Amount,
+                paymentResponse.Currency);
+
+            paymentRepository.Insert(payment);
+
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return Result.Success();
+        }, cancellationToken);
+
+        if (result.IsSuccess && customer is not null)
+        {
+            await cartService.ClearAsync(customer.Id, cancellationToken);
         }
 
-        orderRepository.Insert(order);
-
-        // We're faking a payment gateway request here...
-        PaymentResponse paymentResponse = await paymentService.ChargeAsync(order.TotalPrice, order.Currency);
-
-        var payment = Payment.Create(
-            order,
-            paymentResponse.TransactionId,
-            paymentResponse.Amount,
-            paymentResponse.Currency);
-
-        paymentRepository.Insert(payment);
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
-        await transaction.CommitAsync(cancellationToken);
-
-        await cartService.ClearAsync(customer.Id, cancellationToken);
-
-        return Result.Success();
+        return result;
     }
 }
