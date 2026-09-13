@@ -34,7 +34,7 @@ jobs:
         run: dotnet build Evently.slnx --configuration Release --no-restore
 
       - name: Test (all test projects)
-        run: dotnet test Evently.slnx --configuration Release --no-restore --no-build "trx;LogFileName=test-results.trx"
+        run: dotnet test Evently.slnx --configuration Release --no-restore --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Upload test results
         if: always()
