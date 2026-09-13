@@ -3,17 +3,18 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <UserSecretsId>abae8c35-d2bc-47b2-b6c6-f076cab52c94</UserSecretsId>
+        <AspireUseCliBundle>true</AspireUseCliBundle>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\API\Evently.Api\Evently.Api.csproj" />
+        <ProjectReference Include="..\src\API\Evently.Api\Evently.Api.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Aspire.Hosting.Keycloak" />
-      <PackageReference Include="Aspire.Hosting.PostgreSQL" />
-      <PackageReference Include="Aspire.Hosting.RabbitMQ" />
-      <PackageReference Include="Aspire.Hosting.Redis" />
+        <PackageReference Include="Aspire.Hosting.Keycloak"/>
+        <PackageReference Include="Aspire.Hosting.PostgreSQL"/>
+        <PackageReference Include="Aspire.Hosting.RabbitMQ"/>
+        <PackageReference Include="Aspire.Hosting.Redis"/>
     </ItemGroup>
 
 </Project>
