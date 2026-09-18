@@ -45,19 +45,21 @@ public static class InfrastructureConfiguration
 
         builder.Services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
 
-        try
-        {
-            IConnectionMultiplexer connectionMultiplexer =
-                ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("evently-redis")!);
-            builder.Services.TryAddSingleton(connectionMultiplexer);
+        // try
+        // {
+        //     IConnectionMultiplexer connectionMultiplexer =
+        //         ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("evently-redis")!);
+        //     builder.Services.TryAddSingleton(connectionMultiplexer);
+        //
+        //     builder.Services.AddStackExchangeRedisCache(options =>
+        //         options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer));
+        // }
+        // catch
+        // {
+        //     builder.Services.AddDistributedMemoryCache();
+        // }
+        builder.AddRedisDistributedCache(connectionName: "evently-redis");
 
-            builder.Services.AddStackExchangeRedisCache(options =>
-                options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer));
-        }
-        catch
-        {
-            builder.Services.AddDistributedMemoryCache();
-        }
 
         builder.Services.TryAddSingleton<ICacheService, CacheService>();
         builder.Services.TryAddSingleton<IEventBus, EventBus.EventBus>();
