@@ -1,4 +1,4 @@
-using Projects; 
+using Projects;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
@@ -31,14 +31,17 @@ IResourceBuilder<ContainerResource> keycloak = builder
     .WithRealmImport("../.files/evently-realm-export.json")
     .WithOtlpExporter();
 
-// IResourceBuilder<ParameterResource> rabbitmqUsername = builder.AddParameter("username", "guest", secret: true);
-// IResourceBuilder<ParameterResource> rabbitmqPassword = builder.AddParameter("password", "guest", secret: true);
-// IResourceBuilder<RabbitMQServerResource> rabbitmq = builder.AddRabbitMQ("messaging", rabbitmqUsername, rabbitmqPassword)
-//     .WithLifetime(ContainerLifetime.Persistent)
-//     .WithDataVolume(isReadOnly: false)
-//     .WithEndpoint(name: "rabbitmq-endpoint", scheme: "tcp", port: 5672, targetPort: 5672, isProxied: false)
-//     .WithManagementPlugin(15672)
-//     .WithEndpoint(name: "rabbitmq-management", scheme: "http", port: 15672, targetPort: 15672, isProxied: false);
+IResourceBuilder<ParameterResource> rabbitmqUsername = builder.AddParameter("username", "guest", secret: true);
+IResourceBuilder<ParameterResource> rabbitmqPassword = builder.AddParameter("password", "guest", secret: true);
+IResourceBuilder<RabbitMQServerResource> rabbitmq = builder.AddRabbitMQ("evently-queue", rabbitmqUsername, rabbitmqPassword)
+    .WithImage("rabbitmq", "management-alpine")
+    .WithContainerName("Evently.Queue")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithDataBindMount("../.containers/queue/data", isReadOnly: false)
+    .WithBindMount("../.containers/queue/log", "/var/log/rabbitmq")
+    .WithEndpoint(name: "rabbitmq-endpoint", scheme: "tcp", port: 5672, targetPort: 5672, isProxied: false)
+    .WithManagementPlugin(15672)
+    .WithEndpoint(name: "rabbitmq-management", scheme: "http", port: 15672, targetPort: 15672, isProxied: false);
 
 builder.AddProject<Evently_Api>("evently-api")
     .WithReference(eventlyDb)
@@ -46,8 +49,8 @@ builder.AddProject<Evently_Api>("evently-api")
     .WithReference(redis)
     .WaitFor(redis)
     .WithReference(keycloak.GetEndpoint("keycloak-endpoint"))
-    .WaitFor(keycloak);
-// .WithReference(rabbitmq)
-// .WaitFor(rabbitmq);
+    .WaitFor(keycloak)
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq);
 
 await builder.Build().RunAsync();
