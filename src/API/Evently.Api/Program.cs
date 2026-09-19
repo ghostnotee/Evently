@@ -50,11 +50,13 @@ builder.Services.AddApplication([
 ]);
 
 string connectionStringCache = builder.Configuration.GetConnectionString("evently-redis")!;
-builder.AddInfrastructure([
-    EventsModule.ConfigureConsumers(connectionStringCache),
-    TicketingModule.ConfigureConsumers,
-    AttendanceModule.ConfigureConsumers
-]);
+builder.AddInfrastructure(
+    builder.Environment.ApplicationName,
+    [
+        EventsModule.ConfigureConsumers(connectionStringCache),
+        TicketingModule.ConfigureConsumers,
+        AttendanceModule.ConfigureConsumers
+    ]);
 builder.Configuration.AddModuleConfiguration(["events", "users", "ticketing", "attendance"]);
 
 builder.Services.AddHealthChecks()

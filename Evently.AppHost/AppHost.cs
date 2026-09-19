@@ -34,14 +34,11 @@ IResourceBuilder<ContainerResource> keycloak = builder
 IResourceBuilder<ParameterResource> rabbitmqUsername = builder.AddParameter("username", "guest", secret: true);
 IResourceBuilder<ParameterResource> rabbitmqPassword = builder.AddParameter("password", "guest", secret: true);
 IResourceBuilder<RabbitMQServerResource> rabbitmq = builder.AddRabbitMQ("evently-queue", rabbitmqUsername, rabbitmqPassword)
-    .WithImage("rabbitmq", "management-alpine")
-    .WithContainerName("Evently.Queue")
+    .WithImageTag("management-alpine")
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataBindMount("../.containers/queue/data", isReadOnly: false)
     .WithBindMount("../.containers/queue/log", "/var/log/rabbitmq")
-    .WithEndpoint(name: "rabbitmq-endpoint", scheme: "tcp", port: 5672, targetPort: 5672, isProxied: false)
-    .WithManagementPlugin(15672)
-    .WithEndpoint(name: "rabbitmq-management", scheme: "http", port: 15672, targetPort: 15672, isProxied: false);
+    .WithManagementPlugin(port: 15672);
 
 builder.AddProject<Evently_Api>("evently-api")
     .WithReference(eventlyDb)
@@ -53,4 +50,4 @@ builder.AddProject<Evently_Api>("evently-api")
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
 
-await builder.Build().RunAsync();
+await builder.Build().RunAsync();   

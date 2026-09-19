@@ -27,10 +27,11 @@ namespace Evently.Modules.Events.Infrastructure;
 
 public static class EventsModule
 {
-    public static Action<IRegistrationConfigurator> ConfigureConsumers(string redisConnectionString)
+    public static Action<IRegistrationConfigurator, string> ConfigureConsumers(string redisConnectionString)
     {
-        return registrationConfigurator => registrationConfigurator
+        return (registration, instanceId) => registration
             .AddSagaStateMachine<CancelEventSaga, CancelEventState>()
+            .Endpoint(c => c.InstanceId = instanceId)
             .RedisRepository(redisConnectionString);
     }
 

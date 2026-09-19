@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
     <!-- Aspire -->
@@ -21,7 +22,6 @@
     <!-- Common Application -->
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
     <PackageVersion Include="MassTransit.Abstractions" Version="8.5.10" />
-    <!-- Common Application -->
     <PackageVersion Include="Serilog" Version="4.4.0" />
     <PackageVersion Include="Aspire.Hosting.Redis" Version="13.5.4" />
     <!-- Common Infrastructure -->
@@ -33,6 +33,7 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.21.0" />
     <PackageVersion Include="Scrutor" Version="7.0.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.MassTransit.RabbitMQ" Version="13.5.0" />
     <!-- Modules -->
     <!-- Application -->
     <PackageVersion Include="MediatR" Version="14.2.0" />
@@ -45,6 +46,8 @@
     <PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
     <!-- Evently.Api -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.12" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.17.3" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />

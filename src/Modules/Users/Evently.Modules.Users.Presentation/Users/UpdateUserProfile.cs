@@ -14,7 +14,7 @@ internal sealed class UpdateUserProfile : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("users/{id}/profile", async (Guid id, Request request, ISender sender) =>
+        app.MapPut("users/{id:guid}/profile", async (Guid id, Request request, ISender sender) =>
             {
                 Result result = await sender.Send(new UpdateUserCommand(
                     id,

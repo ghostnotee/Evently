@@ -30,13 +30,18 @@ namespace Evently.Modules.Attendance.Infrastructure;
 
 public static class AttendanceModule
 {
-    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)
+    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator, string instanceId)
     {
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserRegisteredIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserProfileUpdatedIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventPublishedIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<TicketIssuedIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>();
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserRegisteredIntegrationEvent>>()
+            .Endpoint(c => c.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserProfileUpdatedIntegrationEvent>>()
+            .Endpoint(c => c.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventPublishedIntegrationEvent>>()
+            .Endpoint(c => c.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<TicketIssuedIntegrationEvent>>()
+            .Endpoint(c => c.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>()
+            .Endpoint(c => c.InstanceId = instanceId);
     }
 
     extension(IHostApplicationBuilder builder)
@@ -69,7 +74,7 @@ public static class AttendanceModule
             builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<ITicketRepository, TicketRepository>();
             builder.Services.AddScoped<IAttendanceContext, AttendanceContext>();
-            
+
             builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Attendance:Outbox"));
             builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
 
