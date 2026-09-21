@@ -11,6 +11,7 @@
     <Folder Name="/src/" />
     <Folder Name="/src/API/">
         <Project Path="src/API/Evently.Api/Evently.Api.csproj" />
+        <Project Path="src/API/Evently.Gateway/Evently.Gateway.csproj" />
     </Folder>
     <Folder Name="/src/Common/">
         <Project Path="src/Common/Evently.Common.Application/Evently.Common.Application.csproj" />

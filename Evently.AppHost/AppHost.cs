@@ -2,6 +2,8 @@ using Projects;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
+
+
 IResourceBuilder<ParameterResource> username = builder.AddParameter("postgres-user", "postgres", secret: true);
 IResourceBuilder<ParameterResource> password = builder.AddParameter("postgres-pass", "postgres", secret: true);
 IResourceBuilder<PostgresServerResource> postgres = builder
@@ -40,7 +42,7 @@ IResourceBuilder<RabbitMQServerResource> rabbitmq = builder.AddRabbitMQ("evently
     .WithBindMount("../.containers/queue/log", "/var/log/rabbitmq")
     .WithManagementPlugin(port: 15672);
 
-builder.AddProject<Evently_Api>("evently-api")
+IResourceBuilder<ProjectResource> eventlyApi = builder.AddProject<Evently_Api>("evently-api")
     .WithReference(eventlyDb)
     .WaitFor(eventlyDb)
     .WithReference(redis)
@@ -49,5 +51,10 @@ builder.AddProject<Evently_Api>("evently-api")
     .WaitFor(keycloak)
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
+
+builder.AddProject<Evently_Gateway>("evently-gateway")
+    .WithReference(eventlyApi)
+    .WaitFor(eventlyApi)
+    .WithExternalHttpEndpoints();
 
 await builder.Build().RunAsync();   
