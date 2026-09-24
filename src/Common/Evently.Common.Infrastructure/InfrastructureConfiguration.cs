@@ -10,6 +10,7 @@ using Evently.Common.Infrastructure.Caching;
 using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
 using Evently.Common.Infrastructure.Outbox;
+using Evently.Modules.Users.IntegrationEvents;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -100,6 +101,7 @@ public static class InfrastructureConfiguration
                 {
                     configureConsumer(configure, instanceId);
                 }
+                configure.AddRequestClient<GetUserPermissionsRequest>();
             });
     }
 }

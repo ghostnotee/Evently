@@ -1,12 +1,10 @@
-using Evently.Api.Extensions;
-using Evently.Api.Middleware;
 using Evently.Common.Application;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.Endpoints;
-using Evently.Modules.Attendance.Infrastructure;
-using Evently.Modules.Events.Application;
-using Evently.Modules.Events.Infrastructure;
-using Evently.Modules.Users.Infrastructure;
+using Evently.Modules.Ticketing.Application;
+using Evently.Modules.Ticketing.Infrastructure;
+using Evently.Ticketing.Api.Extensions;
+using Evently.Ticketing.Api.Middleware;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.OpenApi;
@@ -42,24 +40,18 @@ builder.Services.AddOpenApi(options =>
 });
 
 builder.Services.AddApplication([
-    AssemblyReference.Assembly,
-    Evently.Modules.Users.Application.AssemblyReference.Assembly,
-    Evently.Modules.Attendance.Application.AssemblyReference.Assembly
+    AssemblyReference.Assembly
 ]);
 
 string connectionStringCache = builder.Configuration.GetConnectionString("evently-redis")!;
 builder.AddInfrastructure(
     builder.Environment.ApplicationName,
     [
-        EventsModule.ConfigureConsumers(connectionStringCache),
-        AttendanceModule.ConfigureConsumers,
-        UsersModule.ConfigureConsumers
+        TicketingModule.ConfigureConsumers
     ]);
 
-builder.Configuration.AddModuleConfiguration(["events", "users", "ticketing", "attendance"]);
-builder.AddEventsModule();
-builder.AddUsersModule();
-builder.AddAttendanceModule();
+builder.Configuration.AddModuleConfiguration(["ticketing"]);
+builder.AddTicketingModule();
 
 builder.Services.AddHealthChecks()
     .AddRedis(connectionStringCache)

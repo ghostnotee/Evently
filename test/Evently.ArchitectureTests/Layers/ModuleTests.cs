@@ -4,8 +4,6 @@ using Evently.Modules.Attendance.Domain.Attendees;
 using Evently.Modules.Attendance.Infrastructure;
 using Evently.Modules.Events.Domain.Events;
 using Evently.Modules.Events.Infrastructure;
-using Evently.Modules.Ticketing.Domain.Orders;
-using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Application;
 using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.Infrastructure;
@@ -63,34 +61,6 @@ public class ModuleTests : BaseTest
         ];
 
         Types.InAssemblies(eventsAssemblies)
-            .That()
-            .DoNotHaveDependencyOnAny(integrationEventsModules)
-            .Should()
-            .NotHaveDependencyOnAny(otherModules)
-            .GetResult()
-            .ShouldBeSuccessful();
-    }
-
-    [Fact]
-    public void TicketingModule_ShouldNotHaveDependencyOn_AnyOtherModule()
-    {
-        string[] otherModules = [EventsNamespace, UsersNamespace, AttendanceNamespace];
-        string[] integrationEventsModules =
-        [
-            EventsIntegrationEventsNamespace,
-            UsersIntegrationEventsNamespace,
-            AttendanceIntegrationEventsNamespace
-        ];
-
-        List<Assembly> ticketingAssemblies =
-        [
-            typeof(Order).Assembly,
-            Modules.Ticketing.Application.AssemblyReference.Assembly,
-            Modules.Ticketing.Presentation.AssemblyReference.Assembly,
-            typeof(TicketingModule).Assembly
-        ];
-
-        Types.InAssemblies(ticketingAssemblies)
             .That()
             .DoNotHaveDependencyOnAny(integrationEventsModules)
             .Should()

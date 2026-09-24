@@ -1,3 +1,4 @@
+using Evently.Common.Application.Authorization;
 using Evently.Common.Application.EventBus;
 using Evently.Common.Application.Messaging;
 using Evently.Common.Infrastructure.Outbox;
@@ -13,6 +14,7 @@ using Evently.Modules.Ticketing.Domain.Orders;
 using Evently.Modules.Ticketing.Domain.Payments;
 using Evently.Modules.Ticketing.Domain.Tickets;
 using Evently.Modules.Ticketing.Infrastructure.Authentication;
+using Evently.Modules.Ticketing.Infrastructure.Authorization;
 using Evently.Modules.Ticketing.Infrastructure.Customers;
 using Evently.Modules.Ticketing.Infrastructure.Database;
 using Evently.Modules.Ticketing.Infrastructure.Events;
@@ -93,6 +95,8 @@ public static class TicketingModule
 
             builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Ticketing:Inbox"));
             builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
+            
+            builder.Services.AddScoped<IPermissionService, PermissionService>();
         }
     }
 

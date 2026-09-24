@@ -13,6 +13,8 @@ using Evently.Modules.Users.Infrastructure.Inbox;
 using Evently.Modules.Users.Infrastructure.Outbox;
 using Evently.Modules.Users.Infrastructure.Users;
 using Evently.Modules.Users.Presentation;
+using Evently.Modules.Users.Presentation.Users;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +35,12 @@ public static class UsersModule
             builder.Services.AddIntegrationEventHandlers();
             builder.AddInfrastructure();
             builder.Services.AddEndpoints(AssemblyReference.Assembly);
+        }
+
+        public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator, string instanceId)
+        {
+            registrationConfigurator.AddConsumer<GetUserPermissionsRequestConsumer>()
+                .Endpoint(c => c.InstanceId = instanceId);
         }
 
         private void AddInfrastructure()

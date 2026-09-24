@@ -2,8 +2,6 @@ using Projects;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
-
-
 IResourceBuilder<ParameterResource> username = builder.AddParameter("postgres-user", "postgres", secret: true);
 IResourceBuilder<ParameterResource> password = builder.AddParameter("postgres-pass", "postgres", secret: true);
 IResourceBuilder<PostgresServerResource> postgres = builder
@@ -38,11 +36,21 @@ IResourceBuilder<ParameterResource> rabbitmqPassword = builder.AddParameter("pas
 IResourceBuilder<RabbitMQServerResource> rabbitmq = builder.AddRabbitMQ("evently-queue", rabbitmqUsername, rabbitmqPassword)
     .WithImageTag("management-alpine")
     .WithLifetime(ContainerLifetime.Persistent)
-    .WithDataBindMount("../.containers/queue/data", isReadOnly: false)
+    .WithDataBindMount("../.containers/queue/data", false)
     .WithBindMount("../.containers/queue/log", "/var/log/rabbitmq")
-    .WithManagementPlugin(port: 15672);
+    .WithManagementPlugin(15672);
 
 IResourceBuilder<ProjectResource> eventlyApi = builder.AddProject<Evently_Api>("evently-api")
+    .WithReference(eventlyDb)
+    .WaitFor(eventlyDb)
+    .WithReference(redis)
+    .WaitFor(redis)
+    .WithReference(keycloak.GetEndpoint("keycloak-endpoint"))
+    .WaitFor(keycloak)
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq);
+
+IResourceBuilder<ProjectResource> eventlyTicketingApi = builder.AddProject<Evently_Ticketing_Api>("evently-ticketing-api")
     .WithReference(eventlyDb)
     .WaitFor(eventlyDb)
     .WithReference(redis)
@@ -55,6 +63,8 @@ IResourceBuilder<ProjectResource> eventlyApi = builder.AddProject<Evently_Api>("
 builder.AddProject<Evently_Gateway>("evently-gateway")
     .WithReference(eventlyApi)
     .WaitFor(eventlyApi)
+    .WithReference(eventlyTicketingApi)
+    .WaitFor(eventlyTicketingApi)
     .WithExternalHttpEndpoints();
 
-await builder.Build().RunAsync();   
+await builder.Build().RunAsync();
