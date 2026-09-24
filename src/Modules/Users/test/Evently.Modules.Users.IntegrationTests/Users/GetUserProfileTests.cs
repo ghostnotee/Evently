@@ -11,7 +11,8 @@ namespace Evently.Modules.Users.IntegrationTests.Users;
 
 public class GetUserProfileTests : BaseIntegrationTest
 {
-    public GetUserProfileTests(IntegrationTestWebAppFactory factory) : base(factory)
+    public GetUserProfileTests(IntegrationTestWebAppFactory factory)
+        : base(factory)
     {
     }
 
@@ -61,3 +62,4 @@ public class GetUserProfileTests : BaseIntegrationTest
         return accessToken;
     }
 }
+

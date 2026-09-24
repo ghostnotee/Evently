@@ -1,18 +1,14 @@
-﻿using Evently.Common.Domain;
+using AwesomeAssertions;
+using Evently.Common.Domain;
 using Evently.Modules.Users.Application.Users.RegisterUser;
 using Evently.Modules.Users.Application.Users.UpdateUser;
 using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.IntegrationTests.Abstractions;
-using AwesomeAssertions;
 
 namespace Evently.Modules.Users.IntegrationTests.Users;
 
 public class UpdateUserTests : BaseIntegrationTest
 {
-    public UpdateUserTests(IntegrationTestWebAppFactory factory)
-        : base(factory)
-    {
-    }
 
     public static readonly TheoryData<UpdateUserCommand> InvalidCommands = new()
     {
@@ -21,12 +17,16 @@ public class UpdateUserTests : BaseIntegrationTest
         new UpdateUserCommand(Guid.NewGuid(), Faker.Name.FirstName(), "")
     };
 
+    public UpdateUserTests(IntegrationTestWebAppFactory factory) : base(factory)
+    {
+    }
+
     [Theory]
     [MemberData(nameof(InvalidCommands))]
     public async Task Should_ReturnError_WhenCommandIsNotValid(UpdateUserCommand command)
     {
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -40,7 +40,7 @@ public class UpdateUserTests : BaseIntegrationTest
         var userId = Guid.NewGuid();
 
         // Act
-        Result updateResult = await Sender.Send(
+        Result updateResult = await SendCommand(
             new UpdateUserCommand(userId, Faker.Name.FirstName(), Faker.Name.LastName()));
 
         // Assert
@@ -51,7 +51,7 @@ public class UpdateUserTests : BaseIntegrationTest
     public async Task Should_ReturnSuccess_WhenUserExists()
     {
         // Arrange
-        Result<Guid> result = await Sender.Send(new RegisterUserCommand(
+        Result<Guid> result = await SendCommand<RegisterUserCommand, Guid>(new RegisterUserCommand(
             Faker.Internet.Email(),
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
@@ -60,7 +60,7 @@ public class UpdateUserTests : BaseIntegrationTest
         Guid userId = result.Value;
 
         // Act
-        Result updateResult = await Sender.Send(
+        Result updateResult = await SendCommand(
             new UpdateUserCommand(userId, Faker.Name.FirstName(), Faker.Name.LastName()));
 
         // Assert

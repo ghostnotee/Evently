@@ -1,20 +1,20 @@
 ﻿using Evently.Common.Application.EventBus;
 using Evently.Common.Application.Exceptions;
+using Evently.Common.Application.Messaging;
 using Evently.Common.Domain;
 using Evently.Modules.Events.IntegrationEvents;
 using Evently.Modules.Ticketing.Application.Events.CreateEvent;
-using MediatR;
 
 namespace Evently.Modules.Ticketing.Presentation.Events;
 
 internal sealed class EventPublishedIntegrationEventHandler(
-    ISender sender) : IntegrationEventHandler<EventPublishedIntegrationEvent>
+    ICommandHandler<CreateEventCommand> handler) : IntegrationEventHandler<EventPublishedIntegrationEvent>
 {
     public override async Task Handle(
         EventPublishedIntegrationEvent integrationEvent,
         CancellationToken cancellationToken = default)
     {
-        Result result = await sender.Send(
+        Result result = await handler.HandleAsync(
             new CreateEventCommand(
                 integrationEvent.EventId,
                 integrationEvent.Title,
@@ -33,9 +33,6 @@ internal sealed class EventPublishedIntegrationEventHandler(
                     .ToList()),
             cancellationToken);
 
-        if (result.IsFailure)
-        {
-            throw new EventlyException(nameof(CreateEventCommand), result.Error);
-        }
+        if (result.IsFailure) throw new EventlyException(nameof(CreateEventCommand), result.Error);
     }
 }

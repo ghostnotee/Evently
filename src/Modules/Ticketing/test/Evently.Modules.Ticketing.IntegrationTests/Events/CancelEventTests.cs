@@ -1,4 +1,4 @@
-﻿using Evently.Common.Domain;
+using Evently.Common.Domain;
 using Evently.Modules.Ticketing.Application.Events.CancelEvent;
 using Evently.Modules.Ticketing.Domain.Events;
 using Evently.Modules.Ticketing.IntegrationTests.Abstractions;
@@ -24,7 +24,7 @@ public class CancelEventTests : BaseIntegrationTest
         var command = new CancelEventCommand(eventId);
 
         //Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         //Assert
         result.Error.Should().Be(EventErrors.NotFound(command.EventId));
@@ -37,14 +37,15 @@ public class CancelEventTests : BaseIntegrationTest
         var eventId = Guid.NewGuid();
         var ticketTypeId = Guid.NewGuid();
 
-        await Sender.CreateEventWithTicketTypeAsync(eventId, ticketTypeId, Quantity);
+        await this.CreateEventWithTicketTypeAsync(eventId, ticketTypeId, Quantity);
 
         var command = new CancelEventCommand(eventId);
 
         //Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         //Assert
         result.IsSuccess.Should().BeTrue();
     }
 }
+

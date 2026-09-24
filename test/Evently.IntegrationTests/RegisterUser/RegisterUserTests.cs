@@ -1,16 +1,15 @@
-﻿using Evently.Common.Domain;
+using AwesomeAssertions;
+using Evently.Common.Domain;
 using Evently.IntegrationTests.Abstractions;
 using Evently.Modules.Attendance.Application.Attendees.GetAttendee;
 using Evently.Modules.Ticketing.Application.Customers.GetCustomer;
 using Evently.Modules.Users.Application.Users.RegisterUser;
-using AwesomeAssertions;
 
 namespace Evently.IntegrationTests.RegisterUser;
 
-public class RegisterUserTests : BaseIntegrationTest
+public sealed class RegisterUserTests : BaseIntegrationTest
 {
-    public RegisterUserTests(IntegrationTestWebAppFactory factory)
-        : base(factory)
+    public RegisterUserTests(IntegrationTestWebAppFactory factory) : base(factory)
     {
     }
 
@@ -24,7 +23,7 @@ public class RegisterUserTests : BaseIntegrationTest
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> userResult = await Sender.Send(command);
+        Result<Guid> userResult = await SendCommand<RegisterUserCommand, Guid>(command);
 
         userResult.IsSuccess.Should().BeTrue();
 
@@ -35,7 +34,7 @@ public class RegisterUserTests : BaseIntegrationTest
             {
                 var query = new GetCustomerQuery(userResult.Value);
 
-                Result<CustomerResponse> customerResult = await Sender.Send(query);
+                Result<CustomerResponse> customerResult = await SendQuery<GetCustomerQuery, CustomerResponse>(query);
 
                 return customerResult;
             });
@@ -55,18 +54,18 @@ public class RegisterUserTests : BaseIntegrationTest
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> userResult = await Sender.Send(command);
+        Result<Guid> userResult = await SendCommand<RegisterUserCommand, Guid>(command);
 
         userResult.IsSuccess.Should().BeTrue();
 
-        // Get customer
+        // Get attendee
         Result<AttendeeResponse> attendeeResult = await Poller.WaitAsync(
             TimeSpan.FromSeconds(15),
             async () =>
             {
                 var query = new GetAttendeeQuery(userResult.Value);
 
-                Result<AttendeeResponse> customerResult = await Sender.Send(query);
+                Result<AttendeeResponse> customerResult = await SendQuery<GetAttendeeQuery, AttendeeResponse>(query);
 
                 return customerResult;
             });

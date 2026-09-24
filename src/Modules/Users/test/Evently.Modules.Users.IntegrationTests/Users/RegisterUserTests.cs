@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
+using AwesomeAssertions;
 using Evently.Modules.Users.IntegrationTests.Abstractions;
 using Evently.Modules.Users.Presentation.Users;
-using AwesomeAssertions;
 
 namespace Evently.Modules.Users.IntegrationTests.Users;
 
@@ -51,7 +51,7 @@ public class RegisterUserTests : BaseIntegrationTest
         };
 
         // Act
-        HttpResponseMessage response = await HttpClient.PostAsJsonAsync<RegisterUser.Request>("users/register", request);
+        HttpResponseMessage response = await HttpClient.PostAsJsonAsync("users/register", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

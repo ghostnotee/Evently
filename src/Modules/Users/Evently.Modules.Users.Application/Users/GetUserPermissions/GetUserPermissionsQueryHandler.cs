@@ -11,7 +11,7 @@ namespace Evently.Modules.Users.Application.Users.GetUserPermissions;
 internal sealed class GetUserPermissionsQueryHandler(
     IDbConnectionFactory dbConnectionFactory) : IQueryHandler<GetUserPermissionsQuery, PermissionsResponse>
 {
-    public async Task<Result<PermissionsResponse>> Handle(
+    public async Task<Result<PermissionsResponse>> HandleAsync(
         GetUserPermissionsQuery request,
         CancellationToken cancellationToken)
     {
@@ -30,10 +30,7 @@ internal sealed class GetUserPermissionsQueryHandler(
 
         List<UserPermission> permissions = (await connection.QueryAsync<UserPermission>(sql, request)).AsList();
 
-        if (!permissions.Any())
-        {
-            return Result.Failure<PermissionsResponse>(UserErrors.NotFound(request.IdentityId));
-        }
+        if (!permissions.Any()) return Result.Failure<PermissionsResponse>(UserErrors.NotFound(request.IdentityId));
 
         return new PermissionsResponse(permissions[0].UserId, permissions.Select(p => p.Permission).ToHashSet());
     }

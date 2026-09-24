@@ -7,10 +7,10 @@ using Evently.Modules.Users.Domain.Users;
 
 namespace Evently.Modules.Users.Application.Users.GetUser;
 
-internal sealed class GetUserQueryHandler(IDbConnectionFactory dbConnectionFactory)
-    : IQueryHandler<GetUserQuery, UserResponse>
+internal sealed class GetUserQueryHandler(
+    IDbConnectionFactory dbConnectionFactory) : IQueryHandler<GetUserQuery, UserResponse>
 {
-    public async Task<Result<UserResponse>> Handle(GetUserQuery request, CancellationToken cancellationToken)
+    public async Task<Result<UserResponse>> HandleAsync(GetUserQuery request, CancellationToken cancellationToken)
     {
         await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
 

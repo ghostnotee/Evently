@@ -1,8 +1,10 @@
-﻿using Evently.Common.Domain;
+﻿using System.Security.Claims;
+using Evently.Common.Application.Messaging;
+using Evently.Common.Domain;
+using Evently.Common.Infrastructure.Authentication;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Common.Presentation.Results;
 using Evently.Modules.Users.Application.Users.UpdateUser;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -13,15 +15,20 @@ internal sealed class UpdateUserProfile : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("users/{id}/profile", async (Guid id, Request request, ISender sender) =>
+        app.MapPut("users/profile", async (
+                Request request,
+                ClaimsPrincipal claims,
+                ICommandHandler<UpdateUserCommand> handler,
+                CancellationToken cancellationToken) =>
             {
-                Result result = await sender.Send(new UpdateUserCommand(
-                    id,
+                Result result = await handler.HandleAsync(new UpdateUserCommand(
+                    claims.GetUserId(),
                     request.FirstName,
-                    request.LastName));
+                    request.LastName), cancellationToken);
 
                 return result.Match(Results.NoContent, ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.ModifyUser)
             .WithTags(Tags.Users);
     }
 

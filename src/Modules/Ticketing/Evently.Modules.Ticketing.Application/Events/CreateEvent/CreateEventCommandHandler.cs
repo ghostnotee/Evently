@@ -8,10 +8,9 @@ namespace Evently.Modules.Ticketing.Application.Events.CreateEvent;
 internal sealed class CreateEventCommandHandler(
     IEventRepository eventRepository,
     ITicketTypeRepository ticketTypeRepository,
-    IUnitOfWork unitOfWork)
-    : ICommandHandler<CreateEventCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateEventCommand>
 {
-    public async Task<Result> Handle(CreateEventCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(CreateEventCommand request, CancellationToken cancellationToken)
     {
         var @event = Event.Create(
             request.EventId,

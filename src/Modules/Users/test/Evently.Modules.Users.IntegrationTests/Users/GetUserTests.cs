@@ -1,4 +1,4 @@
-﻿using Evently.Common.Domain;
+using Evently.Common.Domain;
 using Evently.Modules.Users.Application.Users.GetUser;
 using Evently.Modules.Users.Application.Users.RegisterUser;
 using Evently.Modules.Users.Domain.Users;
@@ -20,7 +20,8 @@ public class GetUserTests : BaseIntegrationTest
         var userId = Guid.NewGuid();
 
         // Act
-        Result<UserResponse> userResult = await Sender.Send(new GetUserQuery(userId));
+        Result<UserResponse> userResult =
+            await SendQuery<GetUserQuery, UserResponse>(new GetUserQuery(userId));
 
         // Assert
         userResult.Error.Should().Be(UserErrors.NotFound(userId));
@@ -30,7 +31,7 @@ public class GetUserTests : BaseIntegrationTest
     public async Task Should_ReturnUser_WhenUserExists()
     {
         // Arrange
-        Result<Guid> result = await Sender.Send(new RegisterUserCommand(
+        Result<Guid> result = await SendCommand<RegisterUserCommand, Guid>(new RegisterUserCommand(
             Faker.Internet.Email(),
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
@@ -38,10 +39,12 @@ public class GetUserTests : BaseIntegrationTest
         Guid userId = result.Value;
 
         // Act
-        Result<UserResponse> userResult = await Sender.Send(new GetUserQuery(userId));
+        Result<UserResponse> userResult =
+            await SendQuery<GetUserQuery, UserResponse>(new GetUserQuery(userId));
 
         // Assert
         userResult.IsSuccess.Should().BeTrue();
         userResult.Value.Should().NotBeNull();
     }
 }
+

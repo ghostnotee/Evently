@@ -1,4 +1,4 @@
-﻿using Evently.Common.Domain;
+using Evently.Common.Domain;
 using Evently.Modules.Ticketing.Application.Carts.ClearCart;
 using Evently.Modules.Ticketing.Domain.Customers;
 using Evently.Modules.Ticketing.IntegrationTests.Abstractions;
@@ -20,7 +20,7 @@ public class ClearCartTests : BaseIntegrationTest
         var command = new ClearCartCommand(Guid.NewGuid());
 
         //Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         //Assert
         result.Error.Should().Be(CustomerErrors.NotFound(command.CustomerId));
@@ -30,12 +30,12 @@ public class ClearCartTests : BaseIntegrationTest
     public async Task Should_ReturnSuccess_WhenCustomerExists()
     {
         //Arrange
-        Guid customerId = await Sender.CreateCustomerAsync(Guid.NewGuid());
+        Guid customerId = await this.CreateCustomerAsync(Guid.NewGuid());
 
         var command = new ClearCartCommand(customerId);
 
         //Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         //Assert
         result.IsSuccess.Should().BeTrue();

@@ -13,31 +13,22 @@ internal sealed class CreateTicketBatchCommandHandler(
     ITicketRepository ticketRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<CreateTicketBatchCommand>
 {
-    public async Task<Result> Handle(CreateTicketBatchCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(CreateTicketBatchCommand request, CancellationToken cancellationToken)
     {
         Order? order = await orderRepository.GetAsync(request.OrderId, cancellationToken);
 
-        if (order is null)
-        {
-            return Result.Failure(OrderErrors.NotFound(request.OrderId));
-        }
+        if (order is null) return Result.Failure(OrderErrors.NotFound(request.OrderId));
 
         Result result = order.IssueTickets();
 
-        if (result.IsFailure)
-        {
-            return Result.Failure(result.Error);
-        }
+        if (result.IsFailure) return Result.Failure(result.Error);
 
         List<Ticket> tickets = [];
         foreach (OrderItem orderItem in order.OrderItems)
         {
             TicketType? ticketType = await ticketTypeRepository.GetAsync(orderItem.TicketTypeId, cancellationToken);
 
-            if (ticketType is null)
-            {
-                return Result.Failure(TicketTypeErrors.NotFound(orderItem.TicketTypeId));
-            }
+            if (ticketType is null) return Result.Failure(TicketTypeErrors.NotFound(orderItem.TicketTypeId));
 
             for (int i = 0; i < orderItem.Quantity; i++)
             {

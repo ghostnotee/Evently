@@ -1,4 +1,4 @@
-﻿using Evently.Common.Domain;
+using Evently.Common.Domain;
 using Evently.Modules.Ticketing.Application.Customers.UpdateCustomer;
 using Evently.Modules.Ticketing.Domain.Customers;
 using Evently.Modules.Ticketing.IntegrationTests.Abstractions;
@@ -23,7 +23,7 @@ public class UpdateCustomerTests : BaseIntegrationTest
             Faker.Name.LastName());
 
         //Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         //Assert
         result.Error.Should().Be(CustomerErrors.NotFound(command.CustomerId));
@@ -33,7 +33,7 @@ public class UpdateCustomerTests : BaseIntegrationTest
     public async Task Should_ReturnSuccess_WhenCustomerIsUpdated()
     {
         //Arrange
-        Guid customerId = await Sender.CreateCustomerAsync(Guid.NewGuid());
+        Guid customerId = await this.CreateCustomerAsync(Guid.NewGuid());
 
         var command = new UpdateCustomerCommand(
             customerId,
@@ -41,7 +41,7 @@ public class UpdateCustomerTests : BaseIntegrationTest
             Faker.Name.LastName());
 
         //Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         //Assert
         result.IsSuccess.Should().BeTrue();
