@@ -1,26 +1,35 @@
-﻿using Bogus.DataSets;
+﻿using AwesomeAssertions;
 using Evently.Common.Domain;
 using Evently.Modules.Attendance.Application.Events.CreateEvent;
 using Evently.Modules.Attendance.IntegrationTests.Abstractions;
-using AwesomeAssertions;
 
 namespace Evently.Modules.Attendance.IntegrationTests.Events;
 
 public class CreateEventTests : BaseIntegrationTest
 {
-    public CreateEventTests(IntegrationTestWebAppFactory factory)
-        : base(factory)
-    {
-    }
 
     public static readonly TheoryData<Guid, string, string, string, DateTime, DateTime?> InvalidData = new()
     {
-        { Guid.Empty, Faker.Music.Genre(), Faker.Music.Genre(), Faker.Address.StreetAddress(), default, default },
-        { Guid.NewGuid(), string.Empty, Faker.Music.Genre(), Faker.Address.StreetAddress(), default, default },
-        { Guid.NewGuid(), Faker.Music.Genre(), string.Empty, Faker.Address.StreetAddress(), default, default },
-        { Guid.NewGuid(), Faker.Music.Genre(), Faker.Music.Genre(), string.Empty, default, default },
-        { Guid.NewGuid(), Faker.Music.Genre(), Faker.Music.Genre(), Faker.Address.StreetAddress(), default, default }
+        {
+            Guid.Empty, Faker.Music.Genre(), Faker.Music.Genre(), Faker.Address.StreetAddress(), default, default
+        },
+        {
+            Guid.NewGuid(), string.Empty, Faker.Music.Genre(), Faker.Address.StreetAddress(), default, default
+        },
+        {
+            Guid.NewGuid(), Faker.Music.Genre(), string.Empty, Faker.Address.StreetAddress(), default, default
+        },
+        {
+            Guid.NewGuid(), Faker.Music.Genre(), Faker.Music.Genre(), string.Empty, default, default
+        },
+        {
+            Guid.NewGuid(), Faker.Music.Genre(), Faker.Music.Genre(), Faker.Address.StreetAddress(), default, default
+        }
     };
+
+    public CreateEventTests(IntegrationTestWebAppFactory factory) : base(factory)
+    {
+    }
 
     [Theory]
     [MemberData(nameof(InvalidData))]
@@ -36,7 +45,7 @@ public class CreateEventTests : BaseIntegrationTest
         var command = new CreateEventCommand(eventId, title, description, location, startsAtUtc, endsAtUtc);
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -57,7 +66,7 @@ public class CreateEventTests : BaseIntegrationTest
             null);
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

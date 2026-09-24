@@ -1,16 +1,15 @@
-﻿using Evently.Common.Domain;
+using AwesomeAssertions;
+using Evently.Common.Domain;
 using Evently.Modules.Attendance.Application.Attendees.CheckInAttendee;
 using Evently.Modules.Attendance.Domain.Attendees;
 using Evently.Modules.Attendance.Domain.Tickets;
 using Evently.Modules.Attendance.IntegrationTests.Abstractions;
-using AwesomeAssertions;
 
 namespace Evently.Modules.Attendance.IntegrationTests.Attendees;
 
 public class CheckInAttendeeTests : BaseIntegrationTest
 {
-    public CheckInAttendeeTests(IntegrationTestWebAppFactory factory)
-       : base(factory)
+    public CheckInAttendeeTests(IntegrationTestWebAppFactory factory) : base(factory)
     {
     }
 
@@ -23,7 +22,7 @@ public class CheckInAttendeeTests : BaseIntegrationTest
             Guid.NewGuid());
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.Error.Should().Be(AttendeeErrors.NotFound(command.AttendeeId));
@@ -33,14 +32,14 @@ public class CheckInAttendeeTests : BaseIntegrationTest
     public async Task Should_ReturnFailure_WhenTicketDoesNotExist()
     {
         // Arrange
-        Guid attendeeId = await Sender.CreateAttendeeAsync(Guid.NewGuid());
+        Guid attendeeId = await this.CreateAttendeeAsync(Guid.NewGuid());
 
         var command = new CheckInAttendeeCommand(
             attendeeId,
             Guid.NewGuid());
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.Error.Should().Be(TicketErrors.NotFound);
@@ -50,16 +49,16 @@ public class CheckInAttendeeTests : BaseIntegrationTest
     public async Task Should_ReturnSuccess_WhenAttendeeCheckedIn()
     {
         //Arrange
-        Guid attendeeId = await Sender.CreateAttendeeAsync(Guid.NewGuid());
-        Guid eventId = await Sender.CreateEventAsync(Guid.NewGuid());
-        Guid ticketId = await Sender.CreateTicketAsync(Guid.NewGuid(), attendeeId, eventId);
+        Guid attendeeId = await this.CreateAttendeeAsync(Guid.NewGuid());
+        Guid eventId = await this.CreateEventAsync(Guid.NewGuid());
+        Guid ticketId = await this.CreateTicketAsync(Guid.NewGuid(), attendeeId, eventId);
 
         var command = new CheckInAttendeeCommand(
             attendeeId,
             ticketId);
 
         //Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         //Assert
         result.IsSuccess.Should().BeTrue();
