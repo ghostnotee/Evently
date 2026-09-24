@@ -1,15 +1,14 @@
-﻿using Evently.Common.Domain;
+using AwesomeAssertions;
+using Evently.Common.Domain;
 using Evently.Modules.Events.Application.TicketTypes.GetTicketType;
 using Evently.Modules.Events.Domain.TicketTypes;
 using Evently.Modules.Events.IntegrationTests.Abstractions;
-using AwesomeAssertions;
 
 namespace Evently.Modules.Events.IntegrationTests.TicketTypes;
 
 public class GetTicketTypeTests : BaseIntegrationTest
 {
-    public GetTicketTypeTests(IntegrationTestWebAppFactory factory)
-        : base(factory)
+    public GetTicketTypeTests(IntegrationTestWebAppFactory factory) : base(factory)
     {
     }
 
@@ -20,7 +19,7 @@ public class GetTicketTypeTests : BaseIntegrationTest
         var query = new GetTicketTypeQuery(Guid.NewGuid());
 
         // Act
-        Result<TicketTypeResponse> result = await Sender.Send(query);
+        Result<TicketTypeResponse> result = await SendQuery<GetTicketTypeQuery, TicketTypeResponse>(query);
 
         // Assert
         result.Error.Should().Be(TicketTypeErrors.NotFound(query.TicketTypeId));
@@ -32,15 +31,15 @@ public class GetTicketTypeTests : BaseIntegrationTest
         // Arrange
         await CleanDatabaseAsync();
 
-        Guid categoryId = await Sender.CreateCategoryAsync(Faker.Music.Genre());
-        Guid eventId = await Sender.CreateEventAsync(categoryId);
+        Guid categoryId = await this.CreateCategoryAsync(Faker.Music.Genre());
+        Guid eventId = await this.CreateEventAsync(categoryId);
 
-        Guid ticketTypeId = await Sender.CreateTicketTypeAsync(eventId);
+        Guid ticketTypeId = await this.CreateTicketTypeAsync(eventId);
 
         var query = new GetTicketTypeQuery(ticketTypeId);
 
         // Act
-        Result<TicketTypeResponse> result = await Sender.Send(query);
+        Result<TicketTypeResponse> result = await SendQuery<GetTicketTypeQuery, TicketTypeResponse>(query);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

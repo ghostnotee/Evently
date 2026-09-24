@@ -1,9 +1,9 @@
-﻿using Evently.Common.Domain;
+﻿using Evently.Common.Application.Messaging;
+using Evently.Common.Domain;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Common.Presentation.Results;
 using Evently.Modules.Events.Application.TicketTypes.GetTicketType;
 using Evently.Modules.Events.Application.TicketTypes.GetTicketTypes;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -14,13 +14,17 @@ internal sealed class GetTicketTypes : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("ticket-types", async (Guid eventId, ISender sender) =>
+        app.MapGet("ticket-types", async (
+                Guid eventId,
+                IQueryHandler<GetTicketTypesQuery, IReadOnlyCollection<TicketTypeResponse>> handler,
+                CancellationToken cancellationToken) =>
             {
-                Result<IReadOnlyCollection<TicketTypeResponse>> result = await sender.Send(
-                    new GetTicketTypesQuery(eventId));
+                Result<IReadOnlyCollection<TicketTypeResponse>> result = await handler.HandleAsync(
+                    new GetTicketTypesQuery(eventId), cancellationToken);
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.GetTicketTypes)
             .WithTags(Tags.TicketTypes);
     }
 }

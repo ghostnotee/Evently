@@ -6,10 +6,10 @@ using Evently.Common.Domain;
 
 namespace Evently.Modules.Events.Application.Events.GetEvents;
 
-internal sealed class GetEventsQueryHandler(IDbConnectionFactory dbConnectionFactory)
-    : IQueryHandler<GetEventsQuery, IReadOnlyCollection<EventResponse>>
+internal sealed class GetEventsQueryHandler(
+    IDbConnectionFactory dbConnectionFactory) : IQueryHandler<GetEventsQuery, IReadOnlyCollection<EventResponse>>
 {
-    public async Task<Result<IReadOnlyCollection<EventResponse>>> Handle(
+    public async Task<Result<IReadOnlyCollection<EventResponse>>> HandleAsync(
         GetEventsQuery request,
         CancellationToken cancellationToken)
     {

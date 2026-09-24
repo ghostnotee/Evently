@@ -1,15 +1,14 @@
-﻿using Evently.Common.Domain;
+﻿using AwesomeAssertions;
+using Evently.Common.Domain;
 using Evently.Modules.Events.Application.Categories.GetCategories;
 using Evently.Modules.Events.Application.Categories.GetCategory;
 using Evently.Modules.Events.IntegrationTests.Abstractions;
-using AwesomeAssertions;
 
 namespace Evently.Modules.Events.IntegrationTests.Categories;
 
 public class GetCategoriesTests : BaseIntegrationTest
 {
-    public GetCategoriesTests(IntegrationTestWebAppFactory factory)
-        : base(factory)
+    public GetCategoriesTests(IntegrationTestWebAppFactory factory) : base(factory)
     {
     }
 
@@ -22,7 +21,8 @@ public class GetCategoriesTests : BaseIntegrationTest
         var query = new GetCategoriesQuery();
 
         // Act
-        Result<IReadOnlyCollection<CategoryResponse>> result = await Sender.Send(query);
+        Result<IReadOnlyCollection<CategoryResponse>> result =
+            await SendQuery<GetCategoriesQuery, IReadOnlyCollection<CategoryResponse>>(query);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -35,13 +35,14 @@ public class GetCategoriesTests : BaseIntegrationTest
         // Arrange
         await CleanDatabaseAsync();
 
-        await Sender.CreateCategoryAsync(Faker.Music.Genre());
-        await Sender.CreateCategoryAsync(Faker.Music.Genre());
+        await this.CreateCategoryAsync(Faker.Music.Genre());
+        await this.CreateCategoryAsync(Faker.Music.Genre());
 
         var query = new GetCategoriesQuery();
 
         // Act
-        Result<IReadOnlyCollection<CategoryResponse>> result = await Sender.Send(query);
+        Result<IReadOnlyCollection<CategoryResponse>> result =
+            await SendQuery<GetCategoriesQuery, IReadOnlyCollection<CategoryResponse>>(query);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

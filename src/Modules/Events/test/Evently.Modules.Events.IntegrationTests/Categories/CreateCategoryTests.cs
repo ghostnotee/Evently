@@ -1,14 +1,13 @@
-﻿using Evently.Common.Domain;
+﻿using AwesomeAssertions;
+using Evently.Common.Domain;
 using Evently.Modules.Events.Application.Categories.CreateCategory;
 using Evently.Modules.Events.IntegrationTests.Abstractions;
-using AwesomeAssertions;
 
 namespace Evently.Modules.Events.IntegrationTests.Categories;
 
 public class CreateCategoryTests : BaseIntegrationTest
 {
-    public CreateCategoryTests(IntegrationTestWebAppFactory factory)
-        : base(factory)
+    public CreateCategoryTests(IntegrationTestWebAppFactory factory) : base(factory)
     {
     }
 
@@ -19,7 +18,7 @@ public class CreateCategoryTests : BaseIntegrationTest
         var command = new CreateCategoryCommand("Category name");
 
         // Act
-        Result<Guid> result = await Sender.Send(command);
+        Result<Guid> result = await SendCommand<CreateCategoryCommand, Guid>(command);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -33,7 +32,7 @@ public class CreateCategoryTests : BaseIntegrationTest
         var command = new CreateCategoryCommand("");
 
         // Act
-        Result<Guid> result = await Sender.Send(command);
+        Result<Guid> result = await SendCommand<CreateCategoryCommand, Guid>(command);
 
         // Assert
         result.IsFailure.Should().BeTrue();

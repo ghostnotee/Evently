@@ -7,10 +7,10 @@ using Evently.Modules.Events.Domain.Events;
 
 namespace Evently.Modules.Events.Application.Events.GetEvent;
 
-internal sealed class GetEventQueryHandler(IDbConnectionFactory dbConnectionFactory)
-    : IQueryHandler<GetEventQuery, EventResponse>
+internal sealed class GetEventQueryHandler(
+    IDbConnectionFactory dbConnectionFactory) : IQueryHandler<GetEventQuery, EventResponse>
 {
-    public async Task<Result<EventResponse>> Handle(GetEventQuery request, CancellationToken cancellationToken)
+    public async Task<Result<EventResponse>> HandleAsync(GetEventQuery request, CancellationToken cancellationToken)
     {
         await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
 
@@ -59,9 +59,7 @@ internal sealed class GetEventQueryHandler(IDbConnectionFactory dbConnectionFact
             splitOn: nameof(TicketTypeResponse.TicketTypeId));
 
         if (!eventsDictionary.TryGetValue(request.EventId, out EventResponse eventResponse))
-        {
             return Result.Failure<EventResponse>(EventErrors.NotFound(request.EventId));
-        }
 
         return eventResponse;
     }

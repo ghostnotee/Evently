@@ -7,10 +7,10 @@ using Evently.Modules.Events.Domain.TicketTypes;
 
 namespace Evently.Modules.Events.Application.TicketTypes.GetTicketType;
 
-internal sealed class GetTicketTypeQueryHandler(IDbConnectionFactory dbConnectionFactory)
-    : IQueryHandler<GetTicketTypeQuery, TicketTypeResponse>
+internal sealed class GetTicketTypeQueryHandler(
+    IDbConnectionFactory dbConnectionFactory) : IQueryHandler<GetTicketTypeQuery, TicketTypeResponse>
 {
-    public async Task<Result<TicketTypeResponse>> Handle(
+    public async Task<Result<TicketTypeResponse>> HandleAsync(
         GetTicketTypeQuery request,
         CancellationToken cancellationToken)
     {
@@ -32,10 +32,7 @@ internal sealed class GetTicketTypeQueryHandler(IDbConnectionFactory dbConnectio
         TicketTypeResponse? ticketType =
             await connection.QuerySingleOrDefaultAsync<TicketTypeResponse>(sql, request);
 
-        if (ticketType is null)
-        {
-            return Result.Failure<TicketTypeResponse>(TicketTypeErrors.NotFound(request.TicketTypeId));
-        }
+        if (ticketType is null) return Result.Failure<TicketTypeResponse>(TicketTypeErrors.NotFound(request.TicketTypeId));
 
         return ticketType;
     }

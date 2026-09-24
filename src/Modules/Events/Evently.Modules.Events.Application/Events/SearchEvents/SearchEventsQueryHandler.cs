@@ -8,10 +8,10 @@ using Evently.Modules.Events.Domain.Events;
 
 namespace Evently.Modules.Events.Application.Events.SearchEvents;
 
-internal sealed class SearchEventsQueryHandler(IDbConnectionFactory dbConnectionFactory)
-    : IQueryHandler<SearchEventsQuery, SearchEventsResponse>
+internal sealed class SearchEventsQueryHandler(
+    IDbConnectionFactory dbConnectionFactory) : IQueryHandler<SearchEventsQuery, SearchEventsResponse>
 {
-    public async Task<Result<SearchEventsResponse>> Handle(
+    public async Task<Result<SearchEventsResponse>> HandleAsync(
         SearchEventsQuery request,
         CancellationToken cancellationToken)
     {
