@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using NetArchTest.Rules;
 
 namespace Evently.Modules.Attendance.ArchitectureTests.Abstractions;

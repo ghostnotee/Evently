@@ -2,7 +2,7 @@
 using Evently.Modules.Attendance.Application.EventStatistics.GetEventStatistics;
 using Evently.Modules.Attendance.Domain.Events;
 using Evently.Modules.Attendance.IntegrationTests.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Attendance.IntegrationTests.EventStatistics;
 

@@ -2,7 +2,7 @@
 using Evently.Modules.Events.Application.Categories.ArchiveCategory;
 using Evently.Modules.Events.Domain.Categories;
 using Evently.Modules.Events.IntegrationTests.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Events.IntegrationTests.Categories;
 

@@ -3,7 +3,7 @@ using Evently.IntegrationTests.Abstractions;
 using Evently.Modules.Attendance.Application.Attendees.GetAttendee;
 using Evently.Modules.Ticketing.Application.Customers.GetCustomer;
 using Evently.Modules.Users.Application.Users.RegisterUser;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.IntegrationTests.RegisterUser;
 

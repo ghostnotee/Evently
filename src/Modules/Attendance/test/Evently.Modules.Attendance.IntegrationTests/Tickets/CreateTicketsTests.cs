@@ -3,7 +3,7 @@ using Evently.Modules.Attendance.Application.Tickets.CreateTicket;
 using Evently.Modules.Attendance.Domain.Attendees;
 using Evently.Modules.Attendance.Domain.Events;
 using Evently.Modules.Attendance.IntegrationTests.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Attendance.IntegrationTests.Tickets;
 

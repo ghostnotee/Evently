@@ -2,7 +2,7 @@
 using Evently.Modules.Ticketing.Application.Events.RescheduleEvent;
 using Evently.Modules.Ticketing.Domain.Events;
 using Evently.Modules.Ticketing.IntegrationTests.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Ticketing.IntegrationTests.Events;
 

@@ -4,7 +4,7 @@ using Evently.Modules.Users.Application.Users.GetUserPermissions;
 using Evently.Modules.Users.Application.Users.RegisterUser;
 using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.IntegrationTests.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Users.IntegrationTests.Users;
 

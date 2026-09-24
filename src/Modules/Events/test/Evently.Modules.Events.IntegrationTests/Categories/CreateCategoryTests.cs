@@ -1,7 +1,7 @@
 ﻿using Evently.Common.Domain;
 using Evently.Modules.Events.Application.Categories.CreateCategory;
 using Evently.Modules.Events.IntegrationTests.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Events.IntegrationTests.Categories;
 

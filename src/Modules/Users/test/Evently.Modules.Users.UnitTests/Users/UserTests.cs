@@ -1,6 +1,6 @@
 ﻿using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.UnitTests.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Users.UnitTests.Users;
 

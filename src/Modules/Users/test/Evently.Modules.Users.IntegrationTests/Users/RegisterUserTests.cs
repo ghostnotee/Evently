@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Evently.Modules.Users.IntegrationTests.Abstractions;
 using Evently.Modules.Users.Presentation.Users;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Users.IntegrationTests.Users;
 
