@@ -1,10 +1,5 @@
-﻿using Evently.Common.Domain;
-using MediatR;
+﻿namespace Evently.Common.Application.Messaging;
 
-namespace Evently.Common.Application.Messaging;
+public interface ICommand;
 
-public interface ICommand : IRequest<Result>, IBaseCommand;
-
-public interface ICommand<TResponse> : IRequest<Result<TResponse>>, IBaseCommand;
-
-public interface IBaseCommand;
+public interface ICommand<TResponse>;

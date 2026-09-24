@@ -19,7 +19,7 @@ internal sealed class CreateOrderCommandHandler(
     CartService cartService,
     IUnitOfWork unitOfWork) : ICommandHandler<CreateOrderCommand>
 {
-    public async Task<Result> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         Customer? customer = null;
 

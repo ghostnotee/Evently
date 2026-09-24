@@ -7,10 +7,10 @@ using Evently.Modules.Ticketing.Domain.Orders;
 
 namespace Evently.Modules.Ticketing.Application.Orders.GetOrder;
 
-internal sealed class GetOrderQueryHandler(IDbConnectionFactory dbConnectionFactory)
-    : IQueryHandler<GetOrderQuery, OrderResponse>
+internal sealed class GetOrderQueryHandler(
+    IDbConnectionFactory dbConnectionFactory) : IQueryHandler<GetOrderQuery, OrderResponse>
 {
-    public async Task<Result<OrderResponse>> Handle(GetOrderQuery request, CancellationToken cancellationToken)
+    public async Task<Result<OrderResponse>> HandleAsync(GetOrderQuery query, CancellationToken cancellationToken)
     {
         await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
 
@@ -52,12 +52,12 @@ internal sealed class GetOrderQueryHandler(IDbConnectionFactory dbConnectionFact
 
                 return order;
             },
-            request,
+            query,
             splitOn: nameof(OrderItemResponse.OrderItemId));
 
-        if (!ordersDictionary.TryGetValue(request.OrderId, out OrderResponse orderResponse))
+        if (!ordersDictionary.TryGetValue(query.OrderId, out OrderResponse orderResponse))
         {
-            return Result.Failure<OrderResponse>(OrderErrors.NotFound(request.OrderId));
+            return Result.Failure<OrderResponse>(OrderErrors.NotFound(query.OrderId));
         }
 
         return orderResponse;

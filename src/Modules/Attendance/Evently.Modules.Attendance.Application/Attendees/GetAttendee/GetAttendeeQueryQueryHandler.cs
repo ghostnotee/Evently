@@ -10,7 +10,7 @@ namespace Evently.Modules.Attendance.Application.Attendees.GetAttendee;
 internal sealed class GetAttendeeQueryQueryHandler(
     IDbConnectionFactory dbConnectionFactory) : IQueryHandler<GetAttendeeQuery, AttendeeResponse>
 {
-    public async Task<Result<AttendeeResponse>> Handle(GetAttendeeQuery request, CancellationToken cancellationToken)
+    public async Task<Result<AttendeeResponse>> HandleAsync(GetAttendeeQuery request, CancellationToken cancellationToken)
     {
         await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
 

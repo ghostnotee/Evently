@@ -19,13 +19,13 @@
     <!-- Common Domain -->
     <PackageVersion Include="Ulid" Version="1.4.1" />
     <!-- Common Application -->
-    <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
     <PackageVersion Include="MassTransit.Abstractions" Version="8.5.10" />
     <!-- Common Application -->
     <PackageVersion Include="Serilog" Version="4.4.0" />
     <PackageVersion Include="Aspire.Hosting.Redis" Version="13.5.3" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
     <!-- Common Infrastructure -->
-    <PackageVersion Include="Dapper" Version="2.1.79" />
+    <PackageVersion Include="Dapper" Version="2.1.89" />
     <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.5.3" />
     <PackageVersion Include="MassTransit" Version="8.5.10" />
     <PackageVersion Include="MassTransit.Redis" Version="8.5.10" />
@@ -35,7 +35,6 @@
     <PackageVersion Include="Scrutor" Version="7.0.0" />
     <!-- Modules -->
     <!-- Application -->
-    <PackageVersion Include="MediatR" Version="14.2.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <!-- Infrastructure -->
     <PackageVersion Include="Aspire.Npgsql" Version="13.5.3" />
