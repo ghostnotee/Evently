@@ -4,7 +4,4 @@
         <ProjectReference Include="..\Evently.Modules.Attendance.Application\Evently.Modules.Attendance.Application.csproj"/>
         <ProjectReference Include="..\Evently.Modules.Attendance.Presentation\Evently.Modules.Attendance.Presentation.csproj"/>
     </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL"/>
-    </ItemGroup>
 </Project>

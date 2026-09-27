@@ -11,18 +11,13 @@ namespace Evently.Modules.Attendance.IntegrationTests.Abstractions;
 public abstract class BaseIntegrationTest : IDisposable
 {
     protected static readonly Faker Faker = new();
-    protected readonly AttendanceDbContext DbContext;
     private readonly IServiceScope _scope;
+    protected readonly AttendanceDbContext DbContext;
 
     protected BaseIntegrationTest(IntegrationTestWebAppFactory factory)
     {
         _scope = factory.Services.CreateScope();
         DbContext = _scope.ServiceProvider.GetRequiredService<AttendanceDbContext>();
-    }
-
-    public void Dispose()
-    {
-        _scope.Dispose();
     }
 
     protected async Task<Result<TResult>> SendCommand<TCommand, TResult>(TCommand command)
@@ -65,5 +60,10 @@ public abstract class BaseIntegrationTest : IDisposable
             DELETE FROM attendance.tickets;
             DELETE FROM attendance.event_statistics;
             """);
+    }
+
+    public void Dispose()
+    {
+        _scope.Dispose();
     }
 }

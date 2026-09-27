@@ -15,28 +15,25 @@ using Evently.Modules.Attendance.Infrastructure.Inbox;
 using Evently.Modules.Attendance.Infrastructure.Outbox;
 using Evently.Modules.Attendance.Infrastructure.Tickets;
 using Evently.Modules.Attendance.Presentation;
-using Evently.Modules.Events.IntegrationEvents;
-using Evently.Modules.Ticketing.IntegrationEvents;
-using Evently.Modules.Users.IntegrationEvents;
-using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Wolverine;
 
 namespace Evently.Modules.Attendance.Infrastructure;
 
 public static class AttendanceModule
 {
-    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)
+    public static void ConfigureWolverine(WolverineOptions options)
     {
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserRegisteredIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserProfileUpdatedIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventPublishedIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<TicketIssuedIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>();
+        options.Discovery.IncludeType<UserRegisteredIntegrationEventConsumer>();
+        options.Discovery.IncludeType<UserProfileUpdatedIntegrationEventConsumer>();
+        options.Discovery.IncludeType<EventPublishedIntegrationEventConsumer>();
+        options.Discovery.IncludeType<TicketIssuedIntegrationEventConsumer>();
+        options.Discovery.IncludeType<EventCancellationStartedIntegrationEventConsumer>();
     }
 
     extension(IHostApplicationBuilder builder)
@@ -69,7 +66,7 @@ public static class AttendanceModule
             builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<ITicketRepository, TicketRepository>();
             builder.Services.AddScoped<IAttendanceContext, AttendanceContext>();
-            
+
             builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Attendance:Outbox"));
             builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
 

@@ -37,7 +37,8 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
             {
                 var query = new GetCustomerQuery(userResult.Value);
 
-                Result<CustomerResponse> customerResult = await SendQuery<GetCustomerQuery, CustomerResponse>(query);
+                Result<CustomerResponse> customerResult =
+                    await SendQuery<GetCustomerQuery, CustomerResponse>(query);
 
                 return customerResult;
             });

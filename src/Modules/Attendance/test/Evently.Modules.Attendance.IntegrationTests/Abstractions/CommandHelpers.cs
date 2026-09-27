@@ -1,9 +1,9 @@
-﻿using AwesomeAssertions;
 using Bogus;
 using Evently.Common.Domain;
 using Evently.Modules.Attendance.Application.Attendees.CreateAttendee;
 using Evently.Modules.Attendance.Application.Events.CreateEvent;
 using Evently.Modules.Attendance.Application.Tickets.CreateTicket;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Attendance.IntegrationTests.Abstractions;
 
@@ -14,7 +14,7 @@ internal static class CommandHelpers
         var faker = new Faker();
         Result result = await test.SendCommand(
             new CreateAttendeeCommand(
-                attendeeId,
+                attendeeId, 
                 faker.Internet.Email(),
                 faker.Name.FirstName(),
                 faker.Name.LastName()));
@@ -47,7 +47,7 @@ internal static class CommandHelpers
         var faker = new Faker();
         Result result = await test.SendCommand(
             new CreateEventCommand(
-                eventId,
+                eventId, 
                 faker.Music.Genre(),
                 faker.Music.Genre(),
                 faker.Address.StreetAddress(),
@@ -56,6 +56,7 @@ internal static class CommandHelpers
 
         result.IsSuccess.Should().BeTrue();
 
-        return eventId;
+        return eventId; 
     }
 }
+

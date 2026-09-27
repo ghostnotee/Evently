@@ -5,9 +5,6 @@
         <ProjectReference Include="..\Evently.Modules.Users.Presentation\Evently.Modules.Users.Presentation.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL"/>
-    </ItemGroup>
-    <ItemGroup>
         <InternalsVisibleTo Include="Evently.Modules.Users.IntegrationTests"/>
         <InternalsVisibleTo Include="Evently.IntegrationTests"/>
     </ItemGroup>

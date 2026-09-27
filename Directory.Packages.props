@@ -11,24 +11,25 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.18.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.18.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.18.0" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.5.3" />
-    <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="13.5.3" />
-    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="13.5.3-preview.1.26425.3" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="13.5.4-preview.1.26464.4" />
     <!-- Static code analysis -->
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.34.0.3385" />
     <!-- Common Domain -->
     <PackageVersion Include="Ulid" Version="1.4.1" />
     <!-- Common Application -->
-    <PackageVersion Include="MassTransit.Abstractions" Version="8.5.10" />
-    <!-- Common Application -->
     <PackageVersion Include="Serilog" Version="4.4.0" />
-    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.5.3" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.5.4" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
     <!-- Common Infrastructure -->
     <PackageVersion Include="Dapper" Version="2.1.89" />
-    <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.5.3" />
-    <PackageVersion Include="MassTransit" Version="8.5.10" />
-    <PackageVersion Include="MassTransit.Redis" Version="8.5.10" />
+    <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="13.5.4" />
+    <PackageVersion Include="Aspire.RabbitMQ.Client" Version="13.5.4" />
+    <PackageVersion Include="WolverineFx" Version="6.40.0" />
+    <PackageVersion Include="WolverineFx.Postgresql" Version="6.40.0" />
+    <PackageVersion Include="WolverineFx.RabbitMQ" Version="6.40.0" />
+    <PackageVersion Include="WolverineFx.RuntimeCompilation" Version="6.40.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.21.0" />
@@ -37,8 +38,8 @@
     <!-- Application -->
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <!-- Infrastructure -->
-    <PackageVersion Include="Aspire.Npgsql" Version="13.5.3" />
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.5.3" />
+    <PackageVersion Include="Aspire.Npgsql" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.5.4" />
     <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />
     <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
@@ -62,6 +63,7 @@
     <PackageVersion Include="Testcontainers.Keycloak" Version="4.15.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.15.0" />
     <PackageVersion Include="Testcontainers.Redis" Version="4.15.0" />
+    <PackageVersion Include="Testcontainers.RabbitMq" Version="4.15.0" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />
   </ItemGroup>
 </Project>

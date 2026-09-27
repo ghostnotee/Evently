@@ -47,7 +47,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
         string redisConnectionString = _redisContainer.GetConnectionString();
 
         Environment.SetEnvironmentVariable("ConnectionStrings:evently-db", dbConnectionString);
-        Environment.SetEnvironmentVariable("ConnectionStrings:evently-redis", redisConnectionString);
+        Environment.SetEnvironmentVariable("ConnectionStrings:evently-cache", redisConnectionString);
 
         string keycloakAddress = _keycloakContainer.GetBaseAddress();
         string keyCloakRealmUrl = $"{keycloakAddress}realms/evently";
