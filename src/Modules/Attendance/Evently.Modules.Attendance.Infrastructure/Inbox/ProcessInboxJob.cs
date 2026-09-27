@@ -22,7 +22,7 @@ internal sealed class ProcessInboxJob(
     IOptions<InboxOptions> inboxOptions,
     ILogger<ProcessInboxJob> logger) : IJob
 {
-    private const string ModuleName = "Ticketing";
+    private const string ModuleName = "Attendance";
 
     public async ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
     {
