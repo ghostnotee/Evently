@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace Evently.Common.Infrastructure.Data;
 
-internal sealed class DbConnectionFactory(NpgsqlDataSource dataSource) : IDbConnectionFactory
+public sealed class DbConnectionFactory(NpgsqlDataSource dataSource) : IDbConnectionFactory
 {
     public async ValueTask<DbConnection> OpenConnectionAsync()
     {
