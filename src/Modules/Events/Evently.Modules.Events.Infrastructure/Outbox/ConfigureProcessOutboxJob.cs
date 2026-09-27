@@ -1,23 +1,23 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 
 namespace Evently.Modules.Events.Infrastructure.Outbox;
 
-internal sealed class ConfigureProcessOutboxJob(IOptions<OutboxOptions> outboxOptions)
-    : IConfigureOptions<QuartzOptions>
+internal static class ConfigureProcessOutboxJob
 {
-    private readonly OutboxOptions _outboxOptions = outboxOptions.Value;
-
-    public void Configure(QuartzOptions options)
+    internal static void Configure(IServiceCollection services, int intervalInSeconds)
     {
-        string jobName = typeof(ProcessOutboxJob).FullName!;
+        services.ConfigureAllQuartzSchedulers(options =>
+        {
+            string jobName = typeof(ProcessOutboxJob).FullName!;
 
-        options
-            .AddJob<ProcessOutboxJob>(configure => configure.WithIdentity(jobName))
-            .AddTrigger(configure =>
-                configure
-                    .ForJob(jobName)
-                    .WithSimpleSchedule(schedule =>
-                        schedule.WithIntervalInSeconds(_outboxOptions.IntervalInSeconds).RepeatForever()));
+            options
+                .AddJob<ProcessOutboxJob>(configure => configure.WithIdentity(jobName))
+                .AddTrigger(configure =>
+                    configure
+                        .ForJob(jobName)
+                        .WithSimpleSchedule(schedule =>
+                            schedule.WithInterval(TimeSpan.FromSeconds(intervalInSeconds)).RepeatForever()));
+        });
     }
 }

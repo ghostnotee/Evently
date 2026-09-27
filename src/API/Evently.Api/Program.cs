@@ -8,7 +8,9 @@ using Evently.Modules.Events.Application;
 using Evently.Modules.Events.Infrastructure;
 using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Infrastructure;
+using HealthChecks.UI.Client;
 using JasperFx.Resources;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
@@ -101,10 +103,10 @@ if (app.Environment.IsDevelopment())
 
 app.MapEndpoints();
 
-// app.MapHealthChecks("/health", new HealthCheckOptions
-// {
-//     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-// });
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.UseSerilogRequestLogging();
 

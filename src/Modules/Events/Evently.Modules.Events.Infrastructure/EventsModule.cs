@@ -66,10 +66,14 @@ public static class EventsModule
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Events:Outbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+            ConfigureProcessOutboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Events:Outbox:IntervalInSeconds"));
 
             builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Events:Inbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
+            ConfigureProcessInboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Events:Inbox:IntervalInSeconds"));
         }
     }
 

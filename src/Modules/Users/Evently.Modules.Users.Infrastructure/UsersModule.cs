@@ -67,10 +67,14 @@ public static class UsersModule
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Users:Outbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+            ConfigureProcessOutboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Users:Outbox:IntervalInSeconds"));
 
             builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Users:Inbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
+            ConfigureProcessInboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Users:Inbox:IntervalInSeconds"));
         }
     }
 

@@ -82,10 +82,14 @@ public static class TicketingModule
             builder.Services.AddScoped<ICustomerContext, CustomerContext>();
 
             builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Ticketing:Outbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+            ConfigureProcessOutboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Ticketing:Outbox:IntervalInSeconds"));
 
             builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Ticketing:Inbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
+            ConfigureProcessInboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Ticketing:Inbox:IntervalInSeconds"));
         }
     }
 

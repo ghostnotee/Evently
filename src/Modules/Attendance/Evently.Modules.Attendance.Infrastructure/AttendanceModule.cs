@@ -68,10 +68,14 @@ public static class AttendanceModule
             builder.Services.AddScoped<IAttendanceContext, AttendanceContext>();
 
             builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Attendance:Outbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+            ConfigureProcessOutboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Attendance:Outbox:IntervalInSeconds"));
 
             builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Attendance:Inbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
+            ConfigureProcessInboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Attendance:Inbox:IntervalInSeconds"));
         }
     }
 

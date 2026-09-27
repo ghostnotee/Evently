@@ -26,12 +26,12 @@ internal sealed class ProcessOutboxJob(
 {
     private const string ModuleName = "Users";
 
-    public async Task Execute(IJobExecutionContext context)
+    public async ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
     {
         logger.LogInformation("{Module} - Beginning to process outbox messages", ModuleName);
 
         await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
-        await using DbTransaction transaction = await connection.BeginTransactionAsync(context.CancellationToken);
+        await using DbTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
 
         IReadOnlyList<OutboxMessageResponse> outboxMessages = await GetOutboxMessagesAsync(connection, transaction);
 
@@ -53,7 +53,7 @@ internal sealed class ProcessOutboxJob(
 
                 foreach (IDomainEventHandler domainEventHandler in domainEventHandlers)
                 {
-                    await domainEventHandler.HandleAsync(domainEvent, context.CancellationToken);
+                    await domainEventHandler.HandleAsync(domainEvent, cancellationToken);
                 }
             }
             catch (Exception caughtException)
@@ -70,7 +70,7 @@ internal sealed class ProcessOutboxJob(
             await UpdateOutboxMessageAsync(connection, transaction, outboxMessage, exception);
         }
 
-        await transaction.CommitAsync(context.CancellationToken);
+        await transaction.CommitAsync(cancellationToken);
         logger.LogInformation("{Module} - Completed processing outbox messages", ModuleName);
     }
 
