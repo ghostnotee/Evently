@@ -1,6 +1,7 @@
 using Evently.Api.Extensions;
 using Evently.Api.Middleware;
 using Evently.Common.Application;
+using Evently.Common.Application.Data;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Attendance.Infrastructure;
@@ -59,6 +60,7 @@ builder.Host.UseWolverine(options =>
 {
     // Required for Wolverine v6.x runtime code generation when using dynamic type loading.
     options.UseRuntimeCompilation();
+    options.CodeGeneration.AlwaysUseServiceLocationFor<IDbConnectionFactory>();
 
     options.PersistMessagesWithPostgresql(builder.Configuration.GetConnectionString("evently-db")!);
 
