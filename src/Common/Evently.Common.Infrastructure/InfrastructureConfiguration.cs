@@ -25,8 +25,6 @@ public static class InfrastructureConfiguration
 {
     public static void AddInfrastructure(this IHostApplicationBuilder builder)
     {
-        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
-
         builder.Services.AddAuthenticationInternal();
 
         builder.Services.AddAuthorizationInternal();
@@ -72,5 +70,6 @@ public static class InfrastructureConfiguration
         builder.AddRabbitMQClient("evently-queue");
 
         builder.AddMongoDBClient("evently-mongo");
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
     }
 }
