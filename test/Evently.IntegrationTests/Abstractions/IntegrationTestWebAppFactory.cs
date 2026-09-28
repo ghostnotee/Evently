@@ -12,7 +12,7 @@ namespace Evently.IntegrationTests.Abstractions;
 
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:18.6-bookworm")
+    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:18.6")
         .WithDatabase("evently")
         .WithUsername("postgres")
         .WithPassword("postgres")
@@ -25,11 +25,11 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
         .WithCommand("--import-realm")
         .Build();
 
-    private readonly RedisContainer _redisContainer = new RedisBuilder("redis:8.10.2")
+    private readonly RedisContainer _redisContainer = new RedisBuilder("redis:8.10")
         .Build();
     
     private readonly RabbitMqContainer _rabbitMqContainer =
-        new RabbitMqBuilder("rabbitmq:4.3.6-alpine").Build();
+        new RabbitMqBuilder("rabbitmq:4.3-alpine").Build();
 
     public async Task InitializeAsync()
     {

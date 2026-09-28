@@ -8,17 +8,17 @@ namespace Evently.Modules.Attendance.IntegrationTests.Abstractions;
 
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:17")
+    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:18.6")
         .WithDatabase("evently")
         .WithUsername("postgres")
         .WithPassword("postgres")
         .Build();
 
-    private readonly RabbitMqContainer _rabbitMqContainer =
-        new RabbitMqBuilder(image: "rabbitmq:4.2.4-management-alpine").Build();
-
-    private readonly RedisContainer _redisContainer = new RedisBuilder("redis:latest")
+    private readonly RedisContainer _redisContainer = new RedisBuilder("redis:8.10")
         .Build();
+    
+    private readonly RabbitMqContainer _rabbitMqContainer =
+        new RabbitMqBuilder("rabbitmq:4.3-alpine").Build();
 
     public async Task InitializeAsync()
     {

@@ -14,13 +14,13 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 {
     public readonly IDateTimeProvider DateTimeProviderMock = Substitute.For<IDateTimeProvider>();
 
-    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:latest")
+    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:18.6")
         .WithDatabase("evently")
         .WithUsername("postgres")
         .WithPassword("postgres")
         .Build();
 
-    private readonly RedisContainer _redisContainer = new RedisBuilder("redis:latest")
+    private readonly RedisContainer _redisContainer = new RedisBuilder("redis:8.10")
         .Build();
 
     public async Task InitializeAsync()

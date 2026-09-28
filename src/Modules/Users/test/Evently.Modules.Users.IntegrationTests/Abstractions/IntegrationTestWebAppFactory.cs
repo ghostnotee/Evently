@@ -11,20 +11,20 @@ namespace Evently.Modules.Users.IntegrationTests.Abstractions;
 
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:latest")
+    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:18.6")
         .WithDatabase("evently")
         .WithUsername("postgres")
         .WithPassword("postgres")
         .Build();
 
-    private readonly KeycloakContainer _keycloakContainer = new KeycloakBuilder("quay.io/keycloak/keycloak:latest")
+    private readonly KeycloakContainer _keycloakContainer = new KeycloakBuilder("quay.io/keycloak/keycloak:26.7")
         .WithResourceMapping(
             new FileInfo("evently-realm-export.json"),
             new FileInfo("/opt/keycloak/data/import/realm.json"))
         .WithCommand("--import-realm")
         .Build();
 
-    private readonly RedisContainer _redisContainer = new RedisBuilder("redis:latest")
+    private readonly RedisContainer _redisContainer = new RedisBuilder("redis:8.10")
         .Build();
 
     public async Task InitializeAsync()
@@ -37,7 +37,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     public new async Task DisposeAsync()
     {
         await _dbContainer.StopAsync();
-        await _dbContainer.StopAsync();
+        await _redisContainer.StopAsync();
         await _keycloakContainer.StopAsync();
     }
 
