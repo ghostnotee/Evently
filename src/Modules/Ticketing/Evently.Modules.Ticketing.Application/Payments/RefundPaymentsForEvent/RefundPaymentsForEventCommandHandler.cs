@@ -11,7 +11,7 @@ internal sealed class RefundPaymentsForEventCommandHandler(
     IPaymentRepository paymentRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<RefundPaymentsForEventCommand>
 {
-    public async Task<Result> Handle(RefundPaymentsForEventCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(RefundPaymentsForEventCommand request, CancellationToken cancellationToken)
     {
         return await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
@@ -31,7 +31,7 @@ internal sealed class RefundPaymentsForEventCommandHandler(
 
                 // Refund sonucunu yakala ve kontrol et
                 Result refundResult = payment.Refund(remainingAmount);
-            
+
                 if (refundResult.IsFailure)
                     // Herhangi bir ödemede hata çıkarsa tüm transaction iptal olsun diye hata dönüyoruz
                     return refundResult;

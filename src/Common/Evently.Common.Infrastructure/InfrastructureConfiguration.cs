@@ -9,7 +9,6 @@ using Evently.Common.Infrastructure.Caching;
 using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
 using Evently.Common.Infrastructure.Outbox;
-using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -21,8 +20,7 @@ namespace Evently.Common.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-    public static void AddInfrastructure(this IHostApplicationBuilder builder,
-        Action<IRegistrationConfigurator>[] moduleConfigureConsumers)
+    public static void AddInfrastructure(this IHostApplicationBuilder builder)
     {
         builder.Services.AddAuthenticationInternal();
 
@@ -36,8 +34,11 @@ public static class InfrastructureConfiguration
         builder.Services.AddQuartz(configurator =>
         {
             var scheduler = Guid.NewGuid();
-            configurator.SchedulerId = $"default-id-{scheduler}";
-            configurator.SchedulerName = $"default-name-{scheduler}";
+            configurator.ConfigureScheduler(options =>
+            {
+                options.InstanceId = $"default-id-{scheduler}";
+                options.InstanceName = $"default-name-{scheduler}";
+            });
         });
         builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
@@ -48,7 +49,7 @@ public static class InfrastructureConfiguration
         try
         {
             IConnectionMultiplexer connectionMultiplexer =
-                ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("evently-redis")!);
+                ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("evently-cache")!);
             builder.Services.TryAddSingleton(connectionMultiplexer);
 
             builder.Services.AddStackExchangeRedisCache(options =>
@@ -60,20 +61,9 @@ public static class InfrastructureConfiguration
         }
 
         builder.Services.TryAddSingleton<ICacheService, CacheService>();
-        builder.Services.TryAddSingleton<IEventBus, EventBus.EventBus>();
-        builder.Services.AddMassTransit(configure =>
-        {
-            foreach (Action<IRegistrationConfigurator> configureConsumer in moduleConfigureConsumers)
-            {
-                configureConsumer(configure);
-            }
+        
+        builder.Services.TryAddScoped<IEventBus, EventBus.EventBus>();
 
-            configure.SetKebabCaseEndpointNameFormatter();
-
-            configure.UsingInMemory((context, cfg) =>
-            {
-                cfg.ConfigureEndpoints(context);
-            });
-        });
+        builder.AddRabbitMQClient("evently-queue");
     }
 }

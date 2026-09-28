@@ -8,6 +8,6 @@
       <ProjectReference Include="..\Evently.Modules.Events.Application\Evently.Modules.Events.Application.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="MassTransit" />
+      <PackageReference Include="WolverineFx" />
     </ItemGroup>
 </Project>

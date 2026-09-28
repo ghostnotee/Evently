@@ -22,14 +22,14 @@ internal sealed class ProcessInboxJob(
     IOptions<InboxOptions> inboxOptions,
     ILogger<ProcessInboxJob> logger) : IJob
 {
-    private const string ModuleName = "Ticketing";
+    private const string ModuleName = "Attendance";
 
-    public async Task Execute(IJobExecutionContext context)
+    public async ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
     {
         logger.LogInformation("{Module} - Beginning to process inbox messages", ModuleName);
 
         await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
-        await using DbTransaction transaction = await connection.BeginTransactionAsync(context.CancellationToken);
+        await using DbTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
 
         IReadOnlyList<InboxMessageResponse> inboxMessages = await GetInboxMessagesAsync(connection, transaction);
 
@@ -52,7 +52,7 @@ internal sealed class ProcessInboxJob(
 
                 foreach (IIntegrationEventHandler integrationEventHandler in handlers)
                 {
-                    await integrationEventHandler.Handle(integrationEvent, context.CancellationToken);
+                    await integrationEventHandler.Handle(integrationEvent, cancellationToken);
                 }
             }
             catch (Exception caughtException)
@@ -69,7 +69,7 @@ internal sealed class ProcessInboxJob(
             await UpdateInboxMessageAsync(connection, transaction, inboxMessage, exception);
         }
 
-        await transaction.CommitAsync(context.CancellationToken);
+        await transaction.CommitAsync(cancellationToken);
 
         logger.LogInformation("{Module} - Completed processing inbox messages", ModuleName);
     }

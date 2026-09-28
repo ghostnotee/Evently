@@ -2,7 +2,7 @@
 using Evently.Modules.Ticketing.Domain.Customers;
 using Evently.Modules.Ticketing.Domain.Orders;
 using Evently.Modules.Ticketing.UnitTests.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Ticketing.UnitTests.Orders;
 

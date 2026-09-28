@@ -1,14 +1,13 @@
-﻿using Evently.Common.Domain;
+using AwesomeAssertions;
+using Evently.Common.Domain;
 using Evently.Modules.Attendance.Application.Attendees.CreateAttendee;
 using Evently.Modules.Attendance.IntegrationTests.Abstractions;
-using FluentAssertions;
 
 namespace Evently.Modules.Attendance.IntegrationTests.Attendees;
 
 public class CreateAttendeeTests : BaseIntegrationTest
 {
-    public CreateAttendeeTests(IntegrationTestWebAppFactory factory)
-       : base(factory)
+    public CreateAttendeeTests(IntegrationTestWebAppFactory factory) : base(factory)
     {
     }
 
@@ -23,7 +22,7 @@ public class CreateAttendeeTests : BaseIntegrationTest
             string.Empty);
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -40,7 +39,7 @@ public class CreateAttendeeTests : BaseIntegrationTest
             Faker.Name.LastName());
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

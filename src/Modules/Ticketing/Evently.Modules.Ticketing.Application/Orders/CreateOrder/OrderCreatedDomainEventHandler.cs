@@ -5,23 +5,20 @@ using Evently.Common.Domain;
 using Evently.Modules.Ticketing.Application.Orders.GetOrder;
 using Evently.Modules.Ticketing.Domain.Orders;
 using Evently.Modules.Ticketing.IntegrationEvents;
-using MediatR;
 
 namespace Evently.Modules.Ticketing.Application.Orders.CreateOrder;
 
-internal sealed class OrderCreatedDomainEventHandler(ISender sender, IEventBus eventBus)
-    : DomainEventHandler<OrderCreatedDomainEvent>
+internal sealed class OrderCreatedDomainEventHandler(
+    IQueryHandler<GetOrderQuery, OrderResponse> handler,
+    IEventBus eventBus) : DomainEventHandler<OrderCreatedDomainEvent>
 {
     public override async Task HandleAsync(
         OrderCreatedDomainEvent notification,
         CancellationToken cancellationToken = default)
     {
-        Result<OrderResponse> result = await sender.Send(new GetOrderQuery(notification.OrderId), cancellationToken);
+        Result<OrderResponse> result = await handler.HandleAsync(new GetOrderQuery(notification.OrderId), cancellationToken);
 
-        if (result.IsFailure)
-        {
-            throw new EventlyException(nameof(GetOrderQuery), result.Error);
-        }
+        if (result.IsFailure) throw new EventlyException(nameof(GetOrderQuery), result.Error);
 
         await eventBus.PublishAsync(
             new OrderCreatedIntegrationEvent(

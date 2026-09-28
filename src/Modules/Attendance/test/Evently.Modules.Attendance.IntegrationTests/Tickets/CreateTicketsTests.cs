@@ -1,16 +1,15 @@
-﻿using Evently.Common.Domain;
+﻿using AwesomeAssertions;
+using Evently.Common.Domain;
 using Evently.Modules.Attendance.Application.Tickets.CreateTicket;
 using Evently.Modules.Attendance.Domain.Attendees;
 using Evently.Modules.Attendance.Domain.Events;
 using Evently.Modules.Attendance.IntegrationTests.Abstractions;
-using FluentAssertions;
 
 namespace Evently.Modules.Attendance.IntegrationTests.Tickets;
 
 public class CreateTicketsTests : BaseIntegrationTest
 {
-    public CreateTicketsTests(IntegrationTestWebAppFactory factory)
-       : base(factory)
+    public CreateTicketsTests(IntegrationTestWebAppFactory factory) : base(factory)
     {
     }
 
@@ -25,7 +24,7 @@ public class CreateTicketsTests : BaseIntegrationTest
             Faker.Random.String());
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.Error.Should().Be(AttendeeErrors.NotFound(command.AttendeeId));
@@ -35,7 +34,7 @@ public class CreateTicketsTests : BaseIntegrationTest
     public async Task Should_ReturnFailure_WhenEventDoesNotExist()
     {
         // Arrange
-        Guid attendeeId = await Sender.CreateAttendeeAsync(Guid.NewGuid());
+        Guid attendeeId = await this.CreateAttendeeAsync(Guid.NewGuid());
 
         var command = new CreateTicketCommand(
             Guid.NewGuid(),
@@ -44,7 +43,7 @@ public class CreateTicketsTests : BaseIntegrationTest
             Faker.Random.String());
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.Error.Should().Be(EventErrors.NotFound(command.EventId));
@@ -54,8 +53,8 @@ public class CreateTicketsTests : BaseIntegrationTest
     public async Task Should_ReturnSuccess_WhenTicketIsCreated()
     {
         //Arrange
-        Guid attendeeId = await Sender.CreateAttendeeAsync(Guid.NewGuid());
-        Guid eventId = await Sender.CreateEventAsync(Guid.NewGuid());
+        Guid attendeeId = await this.CreateAttendeeAsync(Guid.NewGuid());
+        Guid eventId = await this.CreateEventAsync(Guid.NewGuid());
 
         var command = new CreateTicketCommand(
             Guid.NewGuid(),
@@ -64,7 +63,7 @@ public class CreateTicketsTests : BaseIntegrationTest
             Ulid.NewUlid().ToString());
 
         //Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         //Assert
         result.IsSuccess.Should().BeTrue();

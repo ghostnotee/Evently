@@ -2,7 +2,6 @@ using Evently.Common.Application.EventBus;
 using Evently.Common.Application.Messaging;
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Presentation.Endpoints;
-using Evently.Modules.Events.IntegrationEvents;
 using Evently.Modules.Ticketing.Application.Abstractions.Authentication;
 using Evently.Modules.Ticketing.Application.Abstractions.Data;
 using Evently.Modules.Ticketing.Application.Abstractions.Payments;
@@ -22,26 +21,25 @@ using Evently.Modules.Ticketing.Infrastructure.Outbox;
 using Evently.Modules.Ticketing.Infrastructure.Payments;
 using Evently.Modules.Ticketing.Infrastructure.Tickets;
 using Evently.Modules.Ticketing.Presentation;
-using Evently.Modules.Users.IntegrationEvents;
-using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Wolverine;
 
 namespace Evently.Modules.Ticketing.Infrastructure;
 
 public static class TicketingModule
 {
-    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)
+    public static void ConfigureWolverine(WolverineOptions options)
     {
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserRegisteredIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserProfileUpdatedIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventPublishedIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<TicketTypePriceChangedIntegrationEvent>>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>();
+        options.Discovery.IncludeType<UserRegisteredIntegrationEventConsumer>();
+        options.Discovery.IncludeType<UserProfileUpdatedIntegrationEventConsumer>();
+        options.Discovery.IncludeType<EventPublishedIntegrationEventConsumer>();
+        options.Discovery.IncludeType<TicketTypePriceChangedIntegrationEventConsumer>();
+        options.Discovery.IncludeType<EventCancellationStartedIntegrationEventConsumer>();
     }
 
     extension(IHostApplicationBuilder builder)
@@ -84,10 +82,14 @@ public static class TicketingModule
             builder.Services.AddScoped<ICustomerContext, CustomerContext>();
 
             builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Ticketing:Outbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+            ConfigureProcessOutboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Ticketing:Outbox:IntervalInSeconds"));
 
             builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Ticketing:Inbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
+            ConfigureProcessInboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Ticketing:Inbox:IntervalInSeconds"));
         }
     }
 

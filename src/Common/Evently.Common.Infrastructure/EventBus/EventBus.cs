@@ -1,14 +1,14 @@
 ﻿using Evently.Common.Application.EventBus;
-using MassTransit;
+using Wolverine;
 
 namespace Evently.Common.Infrastructure.EventBus;
 
-internal sealed class EventBus(IBus bus) : IEventBus
+internal sealed class EventBus(IMessageBus bus) : IEventBus
 {
     public async Task PublishAsync<T>(
         T integrationEvent,
         CancellationToken cancellationToken = default) where T : IIntegrationEvent
     {
-        await bus.Publish(integrationEvent, cancellationToken);
+        await bus.PublishAsync(integrationEvent);
     }
 }

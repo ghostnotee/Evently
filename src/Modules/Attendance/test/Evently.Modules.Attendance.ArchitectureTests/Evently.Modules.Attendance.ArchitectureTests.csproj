@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions"  />
+    <PackageReference Include="AwesomeAssertions"  />
     <PackageReference Include="coverlet.collector" >
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Evently.Modules.Attendance.Domain\Evently.Modules.Attendance.Domain.csproj" />
     <ProjectReference Include="..\..\Evently.Modules.Attendance.Infrastructure\Evently.Modules.Attendance.Infrastructure.csproj" />
   </ItemGroup>
 

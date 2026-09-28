@@ -11,24 +11,17 @@ internal sealed class CreateTicketCommandHandler(
     IAttendeeRepository attendeeRepository,
     IEventRepository eventRepository,
     ITicketRepository ticketRepository,
-    IUnitOfWork unitOfWork)
-    : ICommandHandler<CreateTicketCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateTicketCommand>
 {
-    public async Task<Result> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(CreateTicketCommand request, CancellationToken cancellationToken)
     {
         Attendee? attendee = await attendeeRepository.GetAsync(request.AttendeeId, cancellationToken);
 
-        if (attendee is null)
-        {
-            return Result.Failure(AttendeeErrors.NotFound(request.AttendeeId));
-        }
+        if (attendee is null) return Result.Failure(AttendeeErrors.NotFound(request.AttendeeId));
 
         Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 
-        if (@event is null)
-        {
-            return Result.Failure(EventErrors.NotFound(request.EventId));
-        }
+        if (@event is null) return Result.Failure(EventErrors.NotFound(request.EventId));
 
         var ticket = Ticket.Create(request.TicketId, attendee, @event, request.Code);
 

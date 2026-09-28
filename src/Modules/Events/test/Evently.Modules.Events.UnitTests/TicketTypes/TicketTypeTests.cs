@@ -3,7 +3,7 @@ using Evently.Modules.Events.Domain.Categories;
 using Evently.Modules.Events.Domain.Events;
 using Evently.Modules.Events.Domain.TicketTypes;
 using Evently.Modules.Events.UnitTests.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace Evently.Modules.Events.UnitTests.TicketTypes;
 

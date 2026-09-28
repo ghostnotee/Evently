@@ -483,3 +483,5 @@ $RECYCLE.BIN/
 
 # Keycloak temporary files
 .files
+
+.containers

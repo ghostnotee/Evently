@@ -10,7 +10,7 @@ namespace Evently.Modules.Attendance.Application.EventStatistics.GetEventStatist
 internal sealed class GetEventStatisticsQueryHandler(
     IDbConnectionFactory dbConnectionFactory) : IQueryHandler<GetEventStatisticsQuery, EventStatisticsResponse>
 {
-    public async Task<Result<EventStatisticsResponse>> Handle(
+    public async Task<Result<EventStatisticsResponse>> HandleAsync(
         GetEventStatisticsQuery request,
         CancellationToken cancellationToken)
     {
@@ -36,10 +36,7 @@ internal sealed class GetEventStatisticsQueryHandler(
         EventStatisticsResponse? eventStatistics =
             await connection.QuerySingleOrDefaultAsync<EventStatisticsResponse>(sql, request);
 
-        if (eventStatistics is null)
-        {
-            return Result.Failure<EventStatisticsResponse>(EventErrors.NotFound(request.EventId));
-        }
+        if (eventStatistics is null) return Result.Failure<EventStatisticsResponse>(EventErrors.NotFound(request.EventId));
 
         return eventStatistics;
     }

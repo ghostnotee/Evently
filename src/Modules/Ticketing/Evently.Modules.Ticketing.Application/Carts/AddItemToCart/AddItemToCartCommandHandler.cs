@@ -10,26 +10,17 @@ internal sealed class AddItemToCartCommandHandler(
     ITicketTypeRepository ticketTypeRepository,
     CartService cartService) : ICommandHandler<AddItemToCartCommand>
 {
-    public async Task<Result> Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(AddItemToCartCommand request, CancellationToken cancellationToken)
     {
         Customer? customer = await customerRepository.GetAsync(request.CustomerId, cancellationToken);
 
-        if (customer is null)
-        {
-            return Result.Failure(CustomerErrors.NotFound(request.CustomerId));
-        }
+        if (customer is null) return Result.Failure(CustomerErrors.NotFound(request.CustomerId));
 
         TicketType? ticketType = await ticketTypeRepository.GetAsync(request.TicketTypeId, cancellationToken);
 
-        if (ticketType is null)
-        {
-            return Result.Failure(TicketTypeErrors.NotFound(request.TicketTypeId));
-        }
+        if (ticketType is null) return Result.Failure(TicketTypeErrors.NotFound(request.TicketTypeId));
 
-        if (ticketType.AvailableQuantity < request.Quantity)
-        {
-            return Result.Failure(TicketTypeErrors.NotEnoughQuantity(ticketType.AvailableQuantity));
-        }
+        if (ticketType.AvailableQuantity < request.Quantity) return Result.Failure(TicketTypeErrors.NotEnoughQuantity(ticketType.AvailableQuantity));
 
         var cartItem = new CartItem
         {

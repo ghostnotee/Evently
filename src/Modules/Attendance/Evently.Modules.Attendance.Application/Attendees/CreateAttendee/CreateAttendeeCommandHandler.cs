@@ -5,10 +5,11 @@ using Evently.Modules.Attendance.Domain.Attendees;
 
 namespace Evently.Modules.Attendance.Application.Attendees.CreateAttendee;
 
-internal sealed class CreateAttendeeCommandHandler(IAttendeeRepository attendeeRepository, IUnitOfWork unitOfWork)
-    : ICommandHandler<CreateAttendeeCommand>
+internal sealed class CreateAttendeeCommandHandler(
+    IAttendeeRepository attendeeRepository,
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateAttendeeCommand>
 {
-    public async Task<Result> Handle(CreateAttendeeCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(CreateAttendeeCommand request, CancellationToken cancellationToken)
     {
         var attendee = Attendee.Create(request.AttendeeId, request.Email, request.FirstName, request.LastName);
 

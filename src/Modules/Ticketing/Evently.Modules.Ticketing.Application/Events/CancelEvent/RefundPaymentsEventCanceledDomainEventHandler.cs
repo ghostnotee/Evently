@@ -3,22 +3,18 @@ using Evently.Common.Application.Messaging;
 using Evently.Common.Domain;
 using Evently.Modules.Ticketing.Application.Payments.RefundPaymentsForEvent;
 using Evently.Modules.Ticketing.Domain.Events;
-using MediatR;
 
 namespace Evently.Modules.Ticketing.Application.Events.CancelEvent;
 
 internal sealed class RefundPaymentsEventCanceledDomainEventHandler(
-    ISender sender) : DomainEventHandler<EventCanceledDomainEvent>
+    ICommandHandler<RefundPaymentsForEventCommand> handler) : DomainEventHandler<EventCanceledDomainEvent>
 {
     public override async Task HandleAsync(
         EventCanceledDomainEvent domainEvent,
         CancellationToken cancellationToken = default)
     {
-        Result result = await sender.Send(new RefundPaymentsForEventCommand(domainEvent.EventId), cancellationToken);
+        Result result = await handler.HandleAsync(new RefundPaymentsForEventCommand(domainEvent.EventId), cancellationToken);
 
-        if (result.IsFailure)
-        {
-            throw new EventlyException(nameof(RefundPaymentsForEventCommand), result.Error);
-        }
+        if (result.IsFailure) throw new EventlyException(nameof(RefundPaymentsForEventCommand), result.Error);
     }
 }

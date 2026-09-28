@@ -1,15 +1,14 @@
-﻿using Evently.Common.Domain;
+﻿using AwesomeAssertions;
+using Evently.Common.Domain;
 using Evently.Modules.Events.Application.Categories.ArchiveCategory;
 using Evently.Modules.Events.Domain.Categories;
 using Evently.Modules.Events.IntegrationTests.Abstractions;
-using FluentAssertions;
 
 namespace Evently.Modules.Events.IntegrationTests.Categories;
 
 public class ArchiveCategoryTests : BaseIntegrationTest
 {
-    public ArchiveCategoryTests(IntegrationTestWebAppFactory factory)
-        : base(factory)
+    public ArchiveCategoryTests(IntegrationTestWebAppFactory factory) : base(factory)
     {
     }
 
@@ -20,7 +19,7 @@ public class ArchiveCategoryTests : BaseIntegrationTest
         var command = new ArchiveCategoryCommand(Guid.NewGuid());
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.Error.Should().Be(CategoryErrors.NotFound(command.CategoryId));
@@ -30,12 +29,12 @@ public class ArchiveCategoryTests : BaseIntegrationTest
     public async Task Should_ArchiveCategory_WhenCategoryExists()
     {
         // Arrange
-        Guid categoryId = await Sender.CreateCategoryAsync(Faker.Music.Genre());
+        Guid categoryId = await this.CreateCategoryAsync(Faker.Music.Genre());
 
         var command = new ArchiveCategoryCommand(categoryId);
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -45,14 +44,14 @@ public class ArchiveCategoryTests : BaseIntegrationTest
     public async Task Should_ReturnFailure_WhenCategoryAlreadyArchived()
     {
         // Arrange
-        Guid categoryId = await Sender.CreateCategoryAsync(Faker.Music.Genre());
+        Guid categoryId = await this.CreateCategoryAsync(Faker.Music.Genre());
 
         var command = new ArchiveCategoryCommand(categoryId);
 
-        await Sender.Send(command);
+        await SendCommand(command);
 
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await SendCommand(command);
 
         // Assert
         result.Error.Should().Be(CategoryErrors.AlreadyArchived);

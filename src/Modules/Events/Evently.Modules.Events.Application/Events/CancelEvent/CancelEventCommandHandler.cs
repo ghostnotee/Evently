@@ -11,7 +11,7 @@ internal sealed class CancelEventCommandHandler(
     IEventRepository eventRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<CancelEventCommand>
 {
-    public async Task<Result> Handle(CancelEventCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(CancelEventCommand request, CancellationToken cancellationToken)
     {
         Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 

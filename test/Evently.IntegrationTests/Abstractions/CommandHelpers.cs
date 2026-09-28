@@ -1,15 +1,14 @@
-﻿using Bogus;
+﻿using AwesomeAssertions;
+using Bogus;
 using Evently.Common.Domain;
 using Evently.Modules.Ticketing.Application.Events.CreateEvent;
-using FluentAssertions;
-using MediatR;
 
 namespace Evently.IntegrationTests.Abstractions;
 
 internal static class CommandHelpers
 {
     internal static async Task CreateEventAsync(
-        this ISender sender,
+        this BaseIntegrationTest test,
         Guid eventId,
         Guid ticketTypeId,
         decimal quantity)
@@ -24,7 +23,7 @@ internal static class CommandHelpers
             "USD",
             quantity);
 
-        Result result = await sender.Send(new CreateEventCommand(
+        Result result = await test.SendCommand(new CreateEventCommand(
             eventId,
             faker.Music.Genre(),
             faker.Music.Genre(),

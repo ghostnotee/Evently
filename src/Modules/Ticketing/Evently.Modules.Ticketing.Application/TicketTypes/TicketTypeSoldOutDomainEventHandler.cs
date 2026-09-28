@@ -5,8 +5,8 @@ using Evently.Modules.Ticketing.IntegrationEvents;
 
 namespace Evently.Modules.Ticketing.Application.TicketTypes;
 
-internal sealed class TicketTypeSoldOutDomainEventHandler(IEventBus eventBus)
-    : DomainEventHandler<TicketTypeSoldOutDomainEvent>
+internal sealed class TicketTypeSoldOutDomainEventHandler(
+    IEventBus eventBus) : DomainEventHandler<TicketTypeSoldOutDomainEvent>
 {
     public override async Task HandleAsync(
         TicketTypeSoldOutDomainEvent domainEvent,

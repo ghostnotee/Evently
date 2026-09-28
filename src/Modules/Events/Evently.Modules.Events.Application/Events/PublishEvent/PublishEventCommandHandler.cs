@@ -11,7 +11,7 @@ internal sealed class PublishEventCommandHandler(
     ITicketTypeRepository ticketTypeRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<PublishEventCommand>
 {
-    public async Task<Result> Handle(PublishEventCommand request, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(PublishEventCommand request, CancellationToken cancellationToken)
     {
         Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 

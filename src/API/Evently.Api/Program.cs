@@ -1,6 +1,7 @@
 using Evently.Api.Extensions;
 using Evently.Api.Middleware;
 using Evently.Common.Application;
+using Evently.Common.Application.Data;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Attendance.Infrastructure;
@@ -9,10 +10,14 @@ using Evently.Modules.Events.Infrastructure;
 using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Infrastructure;
 using HealthChecks.UI.Client;
+using JasperFx.Resources;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
+using Wolverine;
+using Wolverine.Postgresql;
+using Wolverine.RabbitMQ;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -49,17 +54,38 @@ builder.Services.AddApplication([
     Evently.Modules.Attendance.Application.AssemblyReference.Assembly
 ]);
 
-string connectionStringCache = builder.Configuration.GetConnectionString("evently-redis")!;
-builder.AddInfrastructure([
-    EventsModule.ConfigureConsumers(connectionStringCache),
-    TicketingModule.ConfigureConsumers,
-    AttendanceModule.ConfigureConsumers
-]);
+builder.AddInfrastructure();
+
+builder.Host.UseWolverine(options =>
+{
+    // Required for Wolverine v6.x runtime code generation when using dynamic type loading.
+    options.UseRuntimeCompilation();
+    options.CodeGeneration.AlwaysUseServiceLocationFor<IDbConnectionFactory>();
+
+    options.PersistMessagesWithPostgresql(builder.Configuration.GetConnectionString("evently-db")!);
+
+    options.UseRabbitMq(builder.Configuration.GetConnectionString("evently-queue")!)
+        .AutoProvision()
+        .UseConventionalRouting();
+
+    options.Services.AddResourceSetupOnStartup();
+
+    options.Policies.DisableConventionalLocalRouting();
+
+    options.MultipleHandlerBehavior = MultipleHandlerBehavior.Separated;
+    options.Durability.MessageIdentity = MessageIdentity.IdAndDestination;
+
+    options.Durability.Mode = DurabilityMode.Solo;
+
+    EventsModule.ConfigureWolverine(options);
+    TicketingModule.ConfigureWolverine(options);
+    AttendanceModule.ConfigureWolverine(options);
+});
+
 builder.Configuration.AddModuleConfiguration(["events", "users", "ticketing", "attendance"]);
 
-builder.Services.AddHealthChecks()
-    .AddRedis(connectionStringCache)
-    .AddUrlGroup(new Uri(builder.Configuration["Keycloak:HealthUrl"]!), HttpMethod.Get, "keycloak");
+// builder.Services.AddHealthChecks()
+//     .AddUrlGroup(new Uri(builder.Configuration["Keycloak:HealthUrl"]!), HttpMethod.Get, "keycloak");
 
 builder.AddEventsModule();
 builder.AddUsersModule();
@@ -87,7 +113,9 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 app.UseSerilogRequestLogging();
 
 app.UseExceptionHandler();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 await app.RunAsync();

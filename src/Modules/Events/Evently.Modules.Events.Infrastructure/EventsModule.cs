@@ -11,27 +11,27 @@ using Evently.Modules.Events.Infrastructure.Database;
 using Evently.Modules.Events.Infrastructure.Events;
 using Evently.Modules.Events.Infrastructure.Inbox;
 using Evently.Modules.Events.Infrastructure.Outbox;
+using Evently.Modules.Events.Infrastructure.Sagas;
 using Evently.Modules.Events.Infrastructure.TicketTypes;
 using Evently.Modules.Events.Presentation;
-using Evently.Modules.Events.Presentation.Events.CancelEventSaga;
-using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using IRegistrationConfigurator = MassTransit.IRegistrationConfigurator;
+using Wolverine;
+using Wolverine.RDBMS;
 
 namespace Evently.Modules.Events.Infrastructure;
 
 public static class EventsModule
 {
-    public static Action<IRegistrationConfigurator> ConfigureConsumers(string redisConnectionString)
+    public static void ConfigureWolverine(WolverineOptions options)
     {
-        return registrationConfigurator => registrationConfigurator
-            .AddSagaStateMachine<CancelEventSaga, CancelEventState>()
-            .RedisRepository(redisConnectionString);
+        options.AddSagaType<CancelEventSaga>();
+
+        options.Discovery.IncludeType<CancelEventSaga>();
     }
 
     extension(IHostApplicationBuilder builder)
@@ -66,10 +66,14 @@ public static class EventsModule
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Events:Outbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessOutboxJob>();
+            ConfigureProcessOutboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Events:Outbox:IntervalInSeconds"));
 
             builder.Services.Configure<InboxOptions>(builder.Configuration.GetSection("Events:Inbox"));
-            builder.Services.ConfigureOptions<ConfigureProcessInboxJob>();
+            ConfigureProcessInboxJob.Configure(
+                builder.Services,
+                builder.Configuration.GetValue<int>("Events:Inbox:IntervalInSeconds"));
         }
     }
 
