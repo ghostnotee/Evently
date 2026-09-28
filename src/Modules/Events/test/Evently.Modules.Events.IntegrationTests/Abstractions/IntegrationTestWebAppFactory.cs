@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
 using Testcontainers.PostgreSql;
+using Testcontainers.RabbitMq;
 using Testcontainers.Redis;
 
 namespace Evently.Modules.Events.IntegrationTests.Abstractions;
@@ -22,23 +23,29 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
     private readonly RedisContainer _redisContainer = new RedisBuilder("redis:8.10")
         .Build();
+    
+    private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder("rabbitmq:4.3-alpine")
+        .Build();
 
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
         await _redisContainer.StartAsync();
+        await _rabbitMqContainer.StartAsync();
     }
 
     public new async Task DisposeAsync()
     {
         await _dbContainer.StopAsync();
         await _redisContainer.StopAsync();
+        await _rabbitMqContainer.StopAsync();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("ConnectionStrings:evently-db", _dbContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings:evently-redis", _redisContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings:evently-queue", _rabbitMqContainer.GetConnectionString());
 
         builder.ConfigureTestServices(services =>
         {

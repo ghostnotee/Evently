@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.Keycloak;
 using Testcontainers.PostgreSql;
+using Testcontainers.RabbitMq;
 using Testcontainers.Redis;
 
 namespace Evently.Modules.Users.IntegrationTests.Abstractions;
@@ -26,11 +27,15 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
     private readonly RedisContainer _redisContainer = new RedisBuilder("redis:8.10")
         .Build();
+    
+    private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder("rabbitmq:4.3-alpine")
+        .Build(); 
 
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
         await _redisContainer.StartAsync();
+        await _rabbitMqContainer.StartAsync();
         await _keycloakContainer.StartAsync();
     }
 
@@ -38,6 +43,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     {
         await _dbContainer.StopAsync();
         await _redisContainer.StopAsync();
+        await _rabbitMqContainer.StopAsync();
         await _keycloakContainer.StopAsync();
     }
 
@@ -45,9 +51,11 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     {
         string dbConnectionString = _dbContainer.GetConnectionString();
         string redisConnectionString = _redisContainer.GetConnectionString();
+        string rabbitMqConnectionString = _rabbitMqContainer.GetConnectionString();
 
         Environment.SetEnvironmentVariable("ConnectionStrings:evently-db", dbConnectionString);
         Environment.SetEnvironmentVariable("ConnectionStrings:evently-cache", redisConnectionString);
+        Environment.SetEnvironmentVariable("ConnectionStrings:evently-queue", rabbitMqConnectionString);
 
         string keycloakAddress = _keycloakContainer.GetBaseAddress();
         string keyCloakRealmUrl = $"{keycloakAddress}realms/evently";
