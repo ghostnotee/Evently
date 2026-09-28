@@ -6,4 +6,8 @@
     <ProjectReference Include="..\Evently.Modules.Attendance.IntegrationEvents\Evently.Modules.Attendance.IntegrationEvents.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Bson" />
+  </ItemGroup>
+
 </Project>

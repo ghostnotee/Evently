@@ -4,6 +4,7 @@ using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Attendance.Application.Abstractions.Authentication;
 using Evently.Modules.Attendance.Application.Abstractions.Data;
+using Evently.Modules.Attendance.Application.EventStatistics;
 using Evently.Modules.Attendance.Domain.Attendees;
 using Evently.Modules.Attendance.Domain.Events;
 using Evently.Modules.Attendance.Domain.Tickets;
@@ -65,6 +66,7 @@ public static class AttendanceModule
             builder.Services.AddScoped<IAttendeeRepository, AttendeeRepository>();
             builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+            builder.Services.AddScoped<IEventStatisticsRepository, EventStatisticsRepository>();
             builder.Services.AddScoped<IAttendanceContext, AttendanceContext>();
 
             builder.Services.Configure<OutboxOptions>(builder.Configuration.GetSection("Attendance:Outbox"));

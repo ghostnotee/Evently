@@ -13,12 +13,13 @@ internal sealed class GetEventStatistics : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("event-statistics/{id}", async (
+        app.MapGet("event-statistics/{id:guid}", async (
                 Guid id,
-                IQueryHandler<GetEventStatisticsQuery, EventStatisticsResponse> handler,
+                IQueryHandler<GetEventStatisticsQuery, Application.EventStatistics.EventStatistics> handler,
                 CancellationToken cancellationToken) =>
             {
-                Result<EventStatisticsResponse> result = await handler.HandleAsync(new GetEventStatisticsQuery(id), cancellationToken);
+                Result<Application.EventStatistics.EventStatistics> result =
+                    await handler.HandleAsync(new GetEventStatisticsQuery(id), cancellationToken);
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             })
