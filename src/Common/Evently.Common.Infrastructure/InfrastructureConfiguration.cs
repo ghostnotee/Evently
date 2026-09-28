@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using Quartz;
 using StackExchange.Redis;
 
@@ -22,6 +25,8 @@ public static class InfrastructureConfiguration
 {
     public static void AddInfrastructure(this IHostApplicationBuilder builder)
     {
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
         builder.Services.AddAuthenticationInternal();
 
         builder.Services.AddAuthorizationInternal();
@@ -61,9 +66,11 @@ public static class InfrastructureConfiguration
         }
 
         builder.Services.TryAddSingleton<ICacheService, CacheService>();
-        
+
         builder.Services.TryAddScoped<IEventBus, EventBus.EventBus>();
 
         builder.AddRabbitMQClient("evently-queue");
+
+        builder.AddMongoDBClient("evently-mongo");
     }
 }

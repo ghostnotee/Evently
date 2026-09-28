@@ -41,6 +41,15 @@ IResourceBuilder<RabbitMQServerResource> rabbitmq = builder.AddRabbitMQ("evently
     .WithBindMount("../.containers/queue/log", "/var/log/rabbitmq")
     .WithManagementPlugin(15672);
 
+IResourceBuilder<ParameterResource> mongoUsername = builder.AddParameter("mongo-username", "admin");
+IResourceBuilder<ParameterResource> mongoPassword = builder.AddParameter("mongo-password", "admin", secret: true);
+IResourceBuilder<MongoDBServerResource> mongo = builder
+    .AddMongoDB("evently-mongodb", userName: mongoUsername, password: mongoPassword, port: 27017)
+    .WithImageTag("8.3")
+    .WithDataBindMount("./.containers/mongo")
+    .WithLifetime(ContainerLifetime.Persistent);
+IResourceBuilder<MongoDBDatabaseResource> mongoDb = mongo.AddDatabase("evently-mongo");
+
 builder.AddProject<Evently_Api>("evently-api")
     .WithReference(eventlyDb)
     .WaitFor(eventlyDb)
@@ -49,6 +58,8 @@ builder.AddProject<Evently_Api>("evently-api")
     .WithReference(keycloak.GetEndpoint("keycloak-endpoint"))
     .WaitFor(keycloak)
     .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
+    .WaitFor(rabbitmq)
+    .WithReference(mongoDb)
+    .WaitFor(mongo);
 
 await builder.Build().RunAsync();
