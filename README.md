@@ -1,2 +1,3 @@
 # Evently
-Modular Monolith Architecture - Design modular systems with clear boundaries and a clean migration path to microservices.
+Modular Monolithic Architecture with Aspire - 
+A modular system design with clear boundaries that provides a clear path toward microservices.
