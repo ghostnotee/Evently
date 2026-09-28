@@ -17,7 +17,8 @@ namespace Evently.IntegrationTests.CancelEvent;
 
 public sealed class CancelEventSagaTests : BaseIntegrationTest
 {
-    public CancelEventSagaTests(IntegrationTestWebAppFactory factory) : base(factory)
+    public CancelEventSagaTests(IntegrationTestWebAppFactory factory)
+        : base(factory)
     {
     }
 

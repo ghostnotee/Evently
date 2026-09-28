@@ -63,7 +63,7 @@ public sealed class Payment : Entity
         if (Amount == AmountRefunded)
         {
             RefundedAtUtc = DateTime.UtcNow;
-            Raise(new PaymentRefundedDomainEvent(Id, TransactionId, refundAmount));
+            Raise(new PaymentRefundedDomainEvent(Id,OrderId, TransactionId, refundAmount));
         }
         else
         {
