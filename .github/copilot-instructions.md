@@ -2,13 +2,23 @@
 
 ## Build, test, and lint
 
-The solution targets .NET 10 and is defined by `Evently.slnx`.
+The solution targets .NET 11 and is defined by `Evently.slnx`.
 
 ```bash
 dotnet restore Evently.slnx
 dotnet build Evently.slnx --configuration Release --no-restore
 dotnet test Evently.slnx --configuration Release
 ```
+
+The full test command includes Testcontainers-based integration tests, so Docker must be running.
+
+Run the Aspire application host for local development:
+
+```bash
+dotnet run --project Evently.AppHost
+```
+
+The AppHost provisions PostgreSQL, Redis, RabbitMQ, Keycloak, and MongoDB before starting `Evently.Api`.
 
 To run one test project, pass its project file; for example:
 
@@ -33,6 +43,10 @@ The business modules are Events, Users, Ticketing, and Attendance. Each is divid
 
 Module infrastructure owns its persistence and dependency-registration details. Cross-module communication uses integration-event contracts and handlers rather than reaching into another module’s domain. Domain events raised by entities are collected by the shared domain base; EF Core’s save interceptor persists them to the outbox, and inbox/outbox processing provides durable, idempotent message handling.
 
+`Evently.Api/Program.cs` is the composition root only; feature-specific Wolverine, EF Core, repository, inbox/outbox, and endpoint registration belongs in the module’s infrastructure `*Module` extension.
+
+The AppHost is the source of local infrastructure names and connection strings. The API reads the `evently-db`, `evently-cache`, `evently-queue`, and module configuration sections through Aspire-provided configuration.
+
 ## Codebase conventions
 
 - Implement a feature across the existing layers: application commands/queries and handlers, domain behavior, infrastructure persistence as needed, and presentation endpoints. Follow the corresponding feature’s folder structure and naming.
@@ -41,3 +55,8 @@ Module infrastructure owns its persistence and dependency-registration details. 
 - Keep module registration in that module’s infrastructure registration class and use the module’s existing configuration and database-schema patterns. Put contracts intended for inter-module messages in the module’s `IntegrationEvents` project.
 - Unit tests cover domain behavior; integration tests exercise registered handlers and persistence with the module’s `WebApplicationFactory`/Testcontainers setup; architecture tests protect layer boundaries. Use the existing xUnit, Bogus, and AwesomeAssertions patterns.
 - Follow `.editorconfig`: file-scoped namespaces, four-space indentation, explicit types except where the type is apparent, and the configured C# style rules. `Directory.Build.props` enables nullable references and implicit usings and treats warnings as errors.
+- Validate business rules in Domain factories/methods and represent expected failures through `Result` plus module `*Errors` types. Application handlers should return `Result` rather than throwing for expected failures.
+- Wolverine command/query handlers and FluentValidation validators are discovered by the shared application registration. Preserve the existing handler, validator, record, and feature-folder naming and decorator pipeline.
+- Presentation routes implement `IEndpoint`, use minimal-api route maps, retain module permission and tag conventions, and convert `Result` through `Result.Match(Results.Ok, ApiResults.Problem)`.
+- EF Core module contexts use module-owned schemas and snake-case naming. Add database changes through the module migration conventions rather than modifying other modules’ contexts or schemas.
+- Integration events and domain events are distinct: integration events cross module boundaries; domain events are raised by entities and handled inside/outside the module through the outbox pipeline. Idempotent inbox/outbox decorators are applied by module infrastructure registration.
