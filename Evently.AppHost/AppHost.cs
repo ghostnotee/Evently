@@ -50,7 +50,7 @@ IResourceBuilder<MongoDBServerResource> mongo = builder
     .WithLifetime(ContainerLifetime.Persistent);
 IResourceBuilder<MongoDBDatabaseResource> mongoDb = mongo.AddDatabase("evently-mongo");
 
-builder.AddProject<Evently_Api>("evently-api")
+builder.AddDotnetProject("evently-api", "../src/API/Evently.Api/Evently.Api.csproj")
     .WithReference(eventlyDb)
     .WaitFor(eventlyDb)
     .WithReference(redis)
